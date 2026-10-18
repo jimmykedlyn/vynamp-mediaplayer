@@ -2,6 +2,7 @@
 //! clock, callback statistics) and its instrumentation. Not a player.
 pub mod callback;
 pub mod clock;
+pub mod harness;
 pub mod ring;
 pub mod rt;
 pub mod stats;

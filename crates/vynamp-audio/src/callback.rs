@@ -37,6 +37,11 @@ impl Renderer {
             channels: channels as usize,
         }
     }
+
+    /// Samples waiting in the ring; for start-up prefill, not for the callback.
+    pub fn buffered_samples(&self) -> usize {
+        self.consumer.available()
+    }
 }
 
 // RT-BEGIN: render is the audio callback body.
