@@ -45,10 +45,10 @@ SHA-256: `probe-steady.json` A3621CC778AEFB278F4D013576CDEF808724B1A6B5F4097FBC7
 
 Comandos, todos na worktree, Windows, exit 0 salvo indicação:
 
-- `cargo test --workspace --exclude xtask --locked`: 33 testes dos novos crates, 0 falhas (harness repetido 3× sem flutuação).
+- `cargo test --workspace --exclude xtask --locked`: 34 testes dos novos crates, 0 falhas (harness repetido 3× sem flutuação; `rt_alloc` 40× paralelo e 40× serial antes da correção abaixo, sem reproduzir a corrida localmente).
 - `cargo clippy --workspace --all-targets --locked -- -D warnings` e `cargo clippy -p vynamp-output --features cpal --all-targets --locked -- -D warnings`.
 - `cargo fmt --all -- --check`, `git diff --check`.
-- `cargo xtask ci docs` final: [ci-docs.txt](ci-docs.txt), exit 0 — validação sem erros, fmt/clippy, `cargo test --workspace` (33 testes dos novos crates + 39 unitários + 39 integração do xtask); regenera `VALIDATION.json`. A tentativa anterior falhou (exit 1) somente por `Missing index` dos três documentos novos; corrigido indexando-os em `docs/INDEX.md`.
+- `cargo xtask ci docs` final: [ci-docs.txt](ci-docs.txt), exit 0 — validação sem erros, fmt/clippy, `cargo test --workspace` (34 testes dos novos crates + 39 unitários + 39 integração do xtask); regenera `VALIDATION.json`. A tentativa anterior falhou (exit 1) somente por `Missing index` dos três documentos novos; corrigido indexando-os em `docs/INDEX.md`.
 - Probes de hardware acima.
 
 ## Proposta para o congelamento do ADR-002 (ADR reservado à E01-01)
@@ -62,3 +62,7 @@ Saída shared via CPAL 0.18.2 (Apache-2.0) como adapter atrás de feature; callb
 - `stats` do renderer contam blocos de conversão; o probe usa a duração da callback inteira (`device_callbacks`).
 - Relógio é amostrado no instante da callback; interpolação entre callbacks, generation/cancelamento (E01-03), fade de recuperação de underrun, mixer/drain completo (E01-05) e resampler (E04-02) estão fora do escopo.
 - `Cargo.lock` ganhou 51 pacotes resolvidos para todas as plataformas do CPAL; licenças/inventário transitivo pertencem à TASK-E11-03. Flags `application_ready`/`release_enabled` permanecem false.
+
+## Incidente de CI e correção
+
+CI [39156053036](https://github.com/jimmykedlyn/vynamp-mediaplayer/actions/runs/39156053036) do head `c0a5cbb` falhou só em `tooling (windows-2022)`: `render_allocates_nothing` contou 2 eventos. Causa raiz: o teste media o contador global de processo, e `counter_detects_allocation_inside_section`, rodando em paralelo no mesmo binário, fez exatamente um alloc+dealloc dentro da própria seção. Era corrida de medição entre testes, não alocação do render (os 40+40 reruns locais não reproduziram). Correção: o contador por thread `rt::thread_rt_alloc_events()` passou a ser usado nos testes e no harness, onde a callback roda na própria thread de medição. O contador global continua no probe, onde só a thread CPAL entra em seção. Regressão `thread_counter_ignores_other_threads_sections` (RED por API ausente e depois verde); uma mutação com alocação no render continua detectada (`render path allocated` e harness com 202 eventos).

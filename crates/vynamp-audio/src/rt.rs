@@ -11,6 +11,7 @@ use std::sync::atomic::{AtomicU64, Ordering};
 thread_local! {
     // const-initialized and without Drop: reading it never allocates.
     static DEPTH: Cell<u32> = const { Cell::new(0) };
+    static THREAD_EVENTS: Cell<u64> = const { Cell::new(0) };
 }
 
 static EVENTS: AtomicU64 = AtomicU64::new(0);
@@ -21,6 +22,7 @@ pub struct CountingAllocator;
 fn note() {
     if in_rt_section() {
         EVENTS.fetch_add(1, Ordering::Relaxed);
+        let _ = THREAD_EVENTS.try_with(|n| n.set(n.get() + 1));
     }
 }
 
@@ -64,7 +66,15 @@ pub fn in_rt_section() -> bool {
     DEPTH.try_with(|d| d.get() > 0).unwrap_or(false)
 }
 
-/// Heap events counted inside RT sections since process start (all threads).
+/// Heap events counted inside RT sections since process start, all threads.
+/// Suits a probe whose only RT section is the device callback thread.
 pub fn rt_alloc_events() -> u64 {
     EVENTS.load(Ordering::Relaxed)
+}
+
+/// Heap events counted inside RT sections on the calling thread only. Use
+/// this when the measured callback runs on the measuring thread, so other
+/// threads' sections (e.g. concurrent tests) cannot leak into the result.
+pub fn thread_rt_alloc_events() -> u64 {
+    THREAD_EVENTS.try_with(Cell::get).unwrap_or(0)
 }

@@ -2,7 +2,7 @@
 use vynamp_audio::{
     callback::Renderer,
     clock, ring,
-    rt::{CountingAllocator, rt_alloc_events, rt_section},
+    rt::{CountingAllocator, rt_section, thread_rt_alloc_events},
     stats::CallbackStats,
 };
 use vynamp_output::convert::ConvertingRenderer;
@@ -23,12 +23,12 @@ fn render_into_allocates_nothing() {
         if i % 4 != 0 {
             tx.push(&block);
         }
-        let before = rt_alloc_events();
+        let before = thread_rt_alloc_events();
         rt_section(|| {
             c.render_into(&mut i16_out, 512);
             c.render_into(&mut i32_out, 512);
         });
-        events += rt_alloc_events() - before;
+        events += thread_rt_alloc_events() - before;
     }
     assert_eq!(events, 0);
 }

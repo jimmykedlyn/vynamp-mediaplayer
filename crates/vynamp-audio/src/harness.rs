@@ -6,7 +6,7 @@ use crate::{
     callback::Renderer,
     clock::{self, ClockSnapshot},
     ring,
-    rt::{rt_alloc_events, rt_section},
+    rt::{rt_section, thread_rt_alloc_events},
     stats::{CallbackStats, StatsReport},
 };
 use std::time::{Duration, Instant};
@@ -93,9 +93,9 @@ pub fn run(cfg: SimConfig) -> SimReport {
     }
     let mut deadline = Instant::now();
     loop {
-        let before = rt_alloc_events();
+        let before = thread_rt_alloc_events();
         let outcome = rt_section(|| renderer.render(&mut out, cfg.latency_frames));
-        alloc_events += rt_alloc_events() - before;
+        alloc_events += thread_rt_alloc_events() - before;
         let content = outcome.content_frames as usize * ch;
         for v in &out[..content] {
             if *v != expected as f32 {
