@@ -2,13 +2,21 @@ use vynamp_audio::clock;
 
 #[test]
 fn presented_subtracts_latency() {
+    // Latency is reported for the first frame of the buffer being written, so
+    // it applies to content consumed before this callback.
     let (mut w, r) = clock::clock();
     w.publish(4800, 0, 960);
+    assert_eq!(
+        r.snapshot().presented_frames,
+        0,
+        "nothing played before first callback"
+    );
+    w.publish(4800, 0, 960);
     let s = r.snapshot();
-    assert_eq!(s.content_frames, 4800);
+    assert_eq!(s.content_frames, 9600);
     assert_eq!(s.latency_frames, 960);
     assert_eq!(s.presented_frames, 3840);
-    assert_eq!(s.callbacks, 1);
+    assert_eq!(s.callbacks, 2);
 }
 
 #[test]
@@ -30,12 +38,16 @@ fn latency_larger_than_content_clamps_to_zero() {
 }
 
 #[test]
-fn presented_is_monotonic_when_latency_drops() {
+fn presented_is_monotonic_when_latency_grows() {
     let (mut w, r) = clock::clock();
-    w.publish(1000, 0, 200); // presented 800
+    w.publish(1000, 0, 0);
+    w.publish(0, 0, 200); // 1000 - 200
+    assert_eq!(r.snapshot().presented_frames, 800);
     w.publish(0, 0, 900); // latency grew: 100 < 800, must not regress
     assert_eq!(r.snapshot().presented_frames, 800);
-    w.publish(500, 0, 100); // 1400
+    w.publish(500, 0, 100); // 1000 - 100
+    assert_eq!(r.snapshot().presented_frames, 900);
+    w.publish(0, 0, 100); // 1500 - 100
     assert_eq!(r.snapshot().presented_frames, 1400);
 }
 

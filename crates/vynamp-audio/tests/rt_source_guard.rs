@@ -3,7 +3,15 @@
 //! facilities. The allocator test proves the allocation part dynamically.
 use std::path::Path;
 
-const RT_FILES: &[&str] = &["ring.rs", "clock.rs", "stats.rs", "callback.rs"];
+// Paths relative to this crate; the output adapter shares the same rules.
+const RT_FILES: &[&str] = &[
+    "src/ring.rs",
+    "src/clock.rs",
+    "src/stats.rs",
+    "src/callback.rs",
+    "../vynamp-output/src/convert.rs",
+    "../vynamp-output/src/shared.rs",
+];
 
 const FORBIDDEN: &[&str] = &[
     "Mutex",
@@ -57,7 +65,7 @@ fn code_only(region: &str) -> String {
 
 #[test]
 fn rt_regions_use_no_forbidden_facilities() {
-    let dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("src");
+    let dir = Path::new(env!("CARGO_MANIFEST_DIR"));
     for file in RT_FILES {
         let src = std::fs::read_to_string(dir.join(file)).unwrap();
         let regions = rt_regions(&src);

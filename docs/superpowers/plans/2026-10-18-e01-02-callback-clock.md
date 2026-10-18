@@ -24,7 +24,7 @@
 
 1. Buffer de saída com tamanho não múltiplo de canais → renderer não pode desalinhar canais (teste `partial_frame_tail_is_zeroed`).
 2. Latência maior que conteúdo consumido (início) → relógio 0, sem underflow (teste `latency_larger_than_content_clamps_to_zero`).
-3. Latência que diminui entre callbacks → posição apresentada não regride (teste `presented_is_monotonic_when_latency_drops`).
+3. Latência que cresce entre callbacks → posição apresentada não regride (teste `presented_is_monotonic_when_latency_grows`).
 4. Produtor mais rápido que capacidade → `push` parcial, nunca sobrescreve não lido (teste `push_never_overwrites_unread`).
 5. Buffer do dispositivo maior que scratch de conversão → zeros + contador, sem alocar (teste `oversized_device_buffer_zero_fills`).
 

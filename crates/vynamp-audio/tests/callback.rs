@@ -101,13 +101,19 @@ fn partial_frame_in_ring_is_not_consumed() {
 #[test]
 fn render_updates_clock_with_device_latency() {
     let (mut tx, mut r, clock, stats) = setup(4096);
-    tx.push(&vec![0.25; 1920]);
+    tx.push(&vec![0.25; 3840]);
     let mut out = vec![0.0; 1920];
+    r.render(&mut out, 480);
+    assert_eq!(
+        clock.snapshot().presented_frames,
+        0,
+        "first buffer not yet audible"
+    );
     r.render(&mut out, 480);
     let s = clock.snapshot();
     assert_eq!(
         (s.content_frames, s.latency_frames, s.presented_frames),
-        (960, 480, 480)
+        (1920, 480, 480)
     );
-    assert_eq!(stats.report().callbacks, 1);
+    assert_eq!(stats.report().callbacks, 2);
 }

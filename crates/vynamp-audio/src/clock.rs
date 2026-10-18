@@ -2,8 +2,8 @@
 //!
 //! The callback is the only writer and never waits: it publishes a snapshot
 //! through a sequence lock. Readers (control/UI threads) retry while a write
-//! is in progress. Presented position is content frames consumed by the device
-//! callback minus the latency the device reports; silence written during an
+//! is in progress. Presented position is content frames consumed by earlier device
+//! callbacks minus the latency the device reports for the current one; silence written during an
 //! underrun or drain is counted separately and never advances the position.
 use std::sync::Arc;
 use std::sync::atomic::{AtomicU64, Ordering, fence};
@@ -17,7 +17,8 @@ pub struct ClockSnapshot {
     pub silence_frames: u64,
     /// Device latency reported at the last callback.
     pub latency_frames: u64,
-    /// Content frames estimated to have left the device; monotonic.
+    /// Content frames played at the last callback instant: content written
+    /// before it minus device latency. Monotonic; never above `content_frames`.
     pub presented_frames: u64,
     /// Callbacks published.
     pub callbacks: u64,
@@ -60,14 +61,17 @@ pub fn clock() -> (ClockWriter, ClockReader) {
 // RT-BEGIN: publish runs inside the audio callback.
 impl ClockWriter {
     /// Records one callback: content and silence frames written to the device
-    /// and the latency the device reported for this buffer.
+    /// and the device-reported delay between this callback and playback of the
+    /// buffer's first frame.
     pub fn publish(&mut self, content_delta: u64, silence_delta: u64, latency_frames: u64) {
         let l = &mut self.local;
+        // `latency_frames` is the delay until the first frame of this buffer
+        // plays, so it is measured against content written before it.
+        let estimate = l.content_frames.saturating_sub(latency_frames);
         l.content_frames += content_delta;
         l.silence_frames += silence_delta;
         l.latency_frames = latency_frames;
         l.callbacks += 1;
-        let estimate = l.content_frames.saturating_sub(latency_frames);
         l.presented_frames = l.presented_frames.max(estimate);
 
         let s = &self.shared;
