@@ -1,0 +1,244 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.42s
+     Running `target\xtask-driver\debug\xtask.exe ci docs`
+{
+  "epics": 17,
+  "errors": [],
+  "format_catalog_entries": 68,
+  "mandatory_platforms": [
+    "Windows x86_64",
+    "Linux x86_64",
+    "macOS Intel x86_64",
+    "macOS Apple Silicon arm64",
+    "Android arm64-v8a"
+  ],
+  "markdown_files": 307,
+  "openapi_paths": 25,
+  "operation_count": 26,
+  "phases": {
+    "M0": 16,
+    "M1": 18,
+    "M2": 37,
+    "M3": 74,
+    "M4": 17,
+    "M5": 14
+  },
+  "requirements": 176,
+  "result": "passed",
+  "schemas_and_examples": 10,
+  "scope": "Validação documental em Rust; não testa player/hardware/API/WIT.",
+  "spec_version": "0.7.0",
+  "tasks": 176
+}
+{"errors":[],"result":"passed","scope":"Structural config validation; no remote CI/signing/hardware claim","workflow_files":3}
+    Checking vynamp-audio v0.7.0 (D:\Projects\vynamp-media-player\repo\.worktrees\claude\task-e01-02-callback\crates\vynamp-audio)
+    Checking xtask v0.7.0 (D:\Projects\vynamp-media-player\repo\.worktrees\claude\task-e01-02-callback\xtask)
+    Checking vynamp-output v0.7.0 (D:\Projects\vynamp-media-player\repo\.worktrees\claude\task-e01-02-callback\crates\vynamp-output)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 13.58s
+   Compiling vynamp-audio v0.7.0 (D:\Projects\vynamp-media-player\repo\.worktrees\claude\task-e01-02-callback\crates\vynamp-audio)
+   Compiling xtask v0.7.0 (D:\Projects\vynamp-media-player\repo\.worktrees\claude\task-e01-02-callback\xtask)
+   Compiling vynamp-output v0.7.0 (D:\Projects\vynamp-media-player\repo\.worktrees\claude\task-e01-02-callback\crates\vynamp-output)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 45.90s
+     Running unittests src\lib.rs (target\xtask-ci\debug\deps\vynamp_audio-766ff23a6ea54229.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\callback.rs (target\xtask-ci\debug\deps\callback-76cc366b19b10d45.exe)
+
+running 5 tests
+test partial_frame_in_ring_is_not_consumed ... ok
+test drain_after_finish_is_not_underrun ... ok
+test partial_frame_tail_is_zeroed ... ok
+test underrun_zero_fills_without_replay ... ok
+test render_updates_clock_with_device_latency ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\clock.rs (target\xtask-ci\debug\deps\clock-dbc64872e89ab677.exe)
+
+running 5 tests
+test latency_larger_than_content_clamps_to_zero ... ok
+test presented_subtracts_latency ... ok
+test presented_is_monotonic_when_latency_grows ... ok
+test silence_does_not_advance_presented ... ok
+test concurrent_reader_sees_consistent_snapshot ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests\harness.rs (target\xtask-ci\debug\deps\harness-19572fba66451633.exe)
+
+running 2 tests
+test steady_run_has_no_underrun ... ok
+test stalled_producer_underruns_without_replay ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.12s
+
+     Running tests\ring.rs (target\xtask-ci\debug\deps\ring-e5a31c2aada1235e.exe)
+
+running 6 tests
+test finish_is_visible_after_data ... ok
+test push_never_overwrites_unread ... ok
+test wraparound_keeps_ramp_contiguous ... ok
+test push_pop_roundtrip_preserves_order ... ok
+test zero_capacity_is_rejected - should panic ... ok
+test threaded_ramp_has_no_loss_or_duplicate ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+
+     Running tests\rt_alloc.rs (target\xtask-ci\debug\deps\rt_alloc-a01a282b8676bc5a.exe)
+
+running 3 tests
+test counter_detects_allocation_inside_section ... ok
+test section_marker_nests_and_unwinds ... ok
+test render_allocates_nothing ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s
+
+     Running tests\rt_source_guard.rs (target\xtask-ci\debug\deps\rt_source_guard-9d057ee9fb371f68.exe)
+
+running 2 tests
+test guard_rejects_a_forbidden_token ... ok
+test rt_regions_use_no_forbidden_facilities ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\stats.rs (target\xtask-ci\debug\deps\stats-4ab32776b9ed617f.exe)
+
+running 3 tests
+test underruns_and_drain_are_counted_separately ... ok
+test p999_reports_tail_when_tail_is_large_enough ... ok
+test p999_bucket_bounds_true_value ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\lib.rs (target\xtask-ci\debug\deps\vynamp_output-4e7bc5c136797611.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\convert.rs (target\xtask-ci\debug\deps\convert-6c6b3b259ecf1cd2.exe)
+
+running 6 tests
+test i16_conversion_clamps_and_rounds ... ok
+test negative_latency_is_zero ... ok
+test f32_device_buffer_passes_samples_unchanged ... ok
+test latency_frames_from_timestamps ... ok
+test i32_conversion_full_scale ... ok
+test oversized_device_buffer_is_rendered_in_chunks ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\rt_alloc.rs (target\xtask-ci\debug\deps\rt_alloc-46e50b2d88723829.exe)
+
+running 1 test
+test render_into_allocates_nothing ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.31s
+
+     Running unittests src\main.rs (target\xtask-ci\debug\deps\xtask-1f7242a65c42289e.exe)
+
+running 39 tests
+test agents::tests::real_codex_manager_output_is_confirmed ... ok
+test agents::tests::plugin_unknown_or_disabled_is_not_installed ... ok
+test branding::tests::native_gate_rejects_empty_icon_containers_and_non_svg_xml ... ok
+test agents::tests::lock_pins_each_agent_separately ... ok
+test agents::tests::claude_entry_of_another_project_does_not_count ... ok
+test branding::tests::native_svg_rejects_active_content_and_accepts_static_geometry ... ok
+test catalog::tests::canonical_planning_catalog_passes ... ok
+test catalog::tests::duplicate_id_and_missing_required_platform_rejected ... ok
+test catalog::tests::incorrect_format_category_and_webm_binding_rejected ... ok
+test ci::docs_target_tests::checks_do_not_rebuild_the_running_driver ... ok
+test ci::docs_target_tests::separate_worktrees_have_separate_check_caches ... ok
+test github::import_branch_tests::existing_remote_bootstrap_branches_are_preserved ... ok
+test github::brand_migration_tests::overlay_removes_previous_brand_templates ... ok
+test github::tests::overlay_removes_legacy_readme_and_preserves_unrelated_files ... ok
+test release::tests::manifest_requires_exact_nonempty_set ... ok
+test repo::github_policy_tests::delete_branch_on_merge_drift_is_pending ... ok
+test repo::github_policy_tests::fully_enforced_gitflow_has_no_pending_items ... ok
+test repo::github_policy_tests::plan_limit_and_settings_drift_are_reported_not_hidden ... ok
+test repo::github_policy_tests::plan_limited_protection_is_recognised ... ok
+test repo::github_policy_tests::protection_keeping_stale_reviews_is_incomplete ... ok
+test repo::github_policy_tests::protection_without_ci_gate_or_allowing_force_push_is_incomplete ... ok
+test release::tests::digest_covers_xtask_and_ignores_activation_flags ... ok
+test repo::github_policy_tests::protection_without_conversation_resolution_is_incomplete ... ok
+test repo::github_policy_tests::protection_without_required_pull_request_is_incomplete ... ok
+test repo::github_policy_tests::solo_review_count_zero_still_counts_as_applied ... ok
+test repo::github_policy_tests::public_repository_is_pending ... ok
+test util::tests::distribution_scan_excludes_synthetic_credentials ... ok
+test util::tests::windows_npm_shim_is_resolved_through_pathext ... ok
+test util::windows_command_path_tests::git_arguments_use_normal_drive_and_unc_paths ... ok
+test util::windows_command_path_tests::unix_paths_and_unsupported_windows_namespaces_are_not_reinterpreted ... ok
+test validate::tests::draft_schema_rejects_invalid_example_and_format ... ok
+test validate::tests::invalid_schema_rejected ... ok
+test catalog::tests::bluetooth_cannot_be_file_handler_and_oversized_request_rejected ... ok
+test catalog::tests::multibyte_locators_and_envelope_limits_are_bytes ... ok
+test catalog::tests::visualizer_preset_cannot_embed_code_or_unbounded_fft ... ok
+Initialized empty Git repository in D:/Projects/vynamp-media-player/.cache/tmp/.tmp1a8MGl/empty source with spaces/
+test catalog::tests::planned_capability_cannot_advertise_availability ... ok
+Cloning into 'D:\Projects\vynamp-media-player\.cache\tmp\.tmp1a8MGl\Vynamp clone with spaces'...
+warning: You appear to have cloned an empty repository.
+done.
+test util::windows_command_path_tests::native_git_clone_accepts_canonical_windows_destination ... ok
+test branding::tests::icns_requires_retina_roles_in_addition_to_pixel_sizes ... ok
+test branding::tests::native_gate_accepts_decodable_multisize_png_icon_containers ... ok
+
+test result: ok. 39 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.26s
+
+     Running tests\tooling.rs (target\xtask-ci\debug\deps\tooling-3010aac78c6c7b9c.exe)
+
+running 39 tests
+test excluded_desktop_package_does_not_activate_core_ci ... ok
+test desktop_detection_parses_a_real_manifest ... ok
+test commit_on_main_is_blocked_after_bootstrap ... ok
+test concurrent_task_claim_has_one_winner ... ok
+test failed_creation_preserves_existing_resources_and_releases_own_claim ... ok
+test fixtures_are_isolated_from_hook_repository_environment ... ok
+test init_creates_main_develop_without_remote ... ok
+test hotfix_merged_only_to_main_is_preserved ... ok
+test agents_have_independent_files_and_indexes ... ok
+test interrupted_claim_is_preserved_without_automatic_takeover ... ok
+test invalid_worktree_arguments_have_no_side_effects ... ok
+test hotfix_requires_both_main_and_develop ... ok
+test no_nested_worktrees ... ok
+test prepare_agents_preserves_dirty_import_checkout ... ok
+test release_blocks_pending_native_branding_exports ... ok
+test release_cannot_publish_unimplemented_player ... ok
+test prepare_agents_adopts_numbered_import_branch ... ok
+test integrated_feature_removal_cleans_only_its_resources ... ok
+test prepare_agents_rejects_claim_without_codex_index ... ok
+test prepare_agents_isolates_bootstrap_and_reviewer_and_can_resume ... ok
+test prepare_agents_rejects_plain_reviewer_folder ... ok
+test prepare_agents_reuses_import_branch_when_develop_is_absent ... ok
+test dirty_worktree_is_preserved ... ok
+test removal_by_other_owner_preserves_claim_and_worktree ... ok
+test removal_preserves_inconsistent_base ... ok
+test removal_preserves_detached_worktree ... ok
+test removal_preserves_inconsistent_branch ... ok
+test removal_preserves_inconsistent_task ... ok
+test removal_preserves_foreign_repository_and_claim ... ok
+test renamed_product_honors_legacy_task_claims ... ok
+test vynamp_zip_uses_new_root_and_contains_approved_branding ... ok
+test xtask_workspace_does_not_activate_player_ci ... ok
+test removal_preflights_configured_upstream ... ok
+test traversal_and_unknown_task_create_no_branch ... ok
+test task_has_only_one_owner ... ok
+test removal_preserves_switched_worktree ... ok
+test windows_autocrlf_keeps_release_sources_identical ... ok
+test unmerged_worktree_is_preserved ... ok
+test removal_preserves_integrated_feature_when_central_head_is_unmerged ... ok
+
+test result: ok. 39 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 38.97s
+
+   Doc-tests vynamp_audio
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests vynamp_output
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s

@@ -7,7 +7,7 @@ Requer Rust/rustup 1.99.0 e ferramentas externas por operação. Cargo.lock é r
 | Validar especificação | `cargo xtask check-docs` |
 | Validar configs | `cargo xtask check-delivery` |
 | Gates locais | `cargo xtask ci docs` |
-| Regressões de tooling | `cargo test --package xtask --locked` |
+| Regressões de tooling e crates do workspace | `cargo test --workspace --locked` (incluído em `cargo xtask ci docs`; xtask isolado: `cargo test --package xtask --locked`) |
 | Verificar plugins nativos | `cargo xtask doctor --agent both` |
 | Preparar autor/revisor bootstrap | `cargo xtask repo prepare-agents` |
 | Worktree | `cargo xtask repo worktree --agent codex --task TASK-E11-01 --slug foundation` |

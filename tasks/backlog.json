@@ -36,7 +36,7 @@
       "title": "Provar callback e output clock",
       "phase": "M0",
       "priority": "P0",
-      "status": "planned",
+      "status": "in_progress",
       "owner_role": "audio",
       "requirements": [
         "REQ-E01-02"

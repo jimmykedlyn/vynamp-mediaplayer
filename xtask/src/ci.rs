@@ -86,17 +86,12 @@ pub fn docs(root: &Path) -> Result<()> {
             "warnings",
         ],
     )?;
+    // Workspace tests cover tooling and real library crates; features that
+    // need system audio headers (e.g. vynamp-output/cpal) stay off here.
     run(
         root,
         "cargo",
-        &[
-            "test",
-            "--target-dir",
-            &target,
-            "--package",
-            "xtask",
-            "--locked",
-        ],
+        &["test", "--target-dir", &target, "--workspace", "--locked"],
     )?;
     Ok(())
 }

@@ -1,6 +1,6 @@
 # TASK-E01-02 — Provar callback e output clock
 
-Versão: 0.7.0 · Data: 2026-10-14 · Estado: especificação proposta, implementação não iniciada.
+Versão: 0.7.0 · Atualização: 2026-10-18 · Estado: em execução; spike implementado e medido em Windows/WASAPI, revisão Codex/CI/integração pendentes, sem aceite antecipado.
 
 ## Contrato da tarefa
 
@@ -8,7 +8,7 @@ Versão: 0.7.0 · Data: 2026-10-14 · Estado: especificação proposta, implemen
 |---|---|
 | ID / requisito | TASK-E01-02 / REQ-E01-02 |
 | Fase / prioridade | M0 / P0 |
-| Estado | Planejada; não implementada |
+| Estado | Em execução — [evidência](../../docs/evidence/PR/task-e01-02/README.md); demais hosts/hardware pendentes |
 | Responsável funcional | audio — pessoa a designar |
 | Esforço provisório | 2–5 dias úteis; reestimar após M0 |
 | Risco | alto |
