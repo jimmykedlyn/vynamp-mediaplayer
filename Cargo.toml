@@ -1,4 +1,4 @@
 [workspace]
-members = ["xtask"]
+members = ["xtask", "crates/vynamp-audio"]
 default-members = ["xtask"]
 resolver = "3"
