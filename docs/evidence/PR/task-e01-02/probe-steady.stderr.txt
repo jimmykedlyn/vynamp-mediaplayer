@@ -1,0 +1,2 @@
+opened DeviceInfo { host: "WASAPI", device: "Headset (USB 384KZ HIFI Audio)", sample_rate: 384000, channels: 2, sample_format: "f32", supported_buffer: "Range { min: 3840, max: 3840 }", requested_buffer_frames: None }
+wrote docs/evidence/PR/task-e01-02/probe-steady.json

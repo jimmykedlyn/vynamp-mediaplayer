@@ -1,0 +1,18 @@
+[package]
+name = "vynamp-output"
+version = "0.7.0"
+edition = "2024"
+rust-version = "1.99"
+publish = false
+description = "Vynamp TASK-E01-02 spike: shared-mode output adapter (CPAL behind the `cpal` feature)"
+
+[features]
+cpal = ["dep:cpal"]
+
+[dependencies]
+vynamp-audio = { path = "../vynamp-audio" }
+cpal = { version = "=0.18.2", optional = true }
+
+[[example]]
+name = "output_probe"
+required-features = ["cpal"]
