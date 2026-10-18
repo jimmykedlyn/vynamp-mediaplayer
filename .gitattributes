@@ -9,3 +9,6 @@
 *.zip binary
 *.flac binary
 *.wav binary
+*.mp3 binary
+*.s32le binary
+*.f32le binary

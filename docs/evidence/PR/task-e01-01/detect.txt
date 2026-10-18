@@ -1,0 +1,4 @@
+   Compiling xtask v0.7.0 (D:\Projects\vynamp-media-player\repo\.worktrees\codex\task-e01-01-decode\xtask)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 20.46s
+     Running `target\xtask-driver\debug\xtask.exe ci detect`
+{"android":"false","core":"false"}

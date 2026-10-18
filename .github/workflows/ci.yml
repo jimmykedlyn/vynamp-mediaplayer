@@ -37,6 +37,8 @@ jobs:
       - run: rustup toolchain install 1.99.0 --profile minimal --component rustfmt --component clippy
       - run: cargo xtask ci docs
       - run: cargo clippy --package xtask --all-targets --locked -- -D warnings
+      - name: Decode spike numerical corpus (no hardware acceptance)
+        run: cargo test --package vynamp-decode --locked
   core:
     needs: docs
     if: needs.docs.outputs.core == 'true'

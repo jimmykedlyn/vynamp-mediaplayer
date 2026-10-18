@@ -619,3 +619,10 @@ Versão 0.7.0 · Markdown de produto, tooling, bootstrap e evidências históric
 - [ADR-009 — workspace mínimo](architecture/adr/ADR-009-engineering-baseline.md) — docs/architecture/adr/ADR-009-engineering-baseline.md
 - [Paths e contrato de fixtures](../tests/fixtures/README.md) — tests/fixtures/README.md
 - [Evidência E11-01](evidence/PR/task-e11-01/README.md) — docs/evidence/PR/task-e11-01/README.md
+
+# Execução E01-01
+
+- [Plano decode E01-01](superpowers/plans/2026-10-18-e01-01-decode.md) — docs/superpowers/plans/2026-10-18-e01-01-decode.md
+- [Corpus decode](../tests/fixtures/audio/decode/README.md) — tests/fixtures/audio/decode/README.md
+- [Evidência E01-01](evidence/PR/task-e01-01/README.md) — docs/evidence/PR/task-e01-01/README.md
+- [Notices do spike](evidence/PR/task-e01-01/NOTICES.md) — docs/evidence/PR/task-e01-01/NOTICES.md

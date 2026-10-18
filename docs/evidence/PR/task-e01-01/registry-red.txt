@@ -1,0 +1,31 @@
+   Compiling vynamp-decode v0.0.0 (D:\Projects\vynamp-media-player\repo\.worktrees\codex\task-e01-01-decode\crates\vynamp-decode)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.92s
+     Running unittests src\lib.rs (target\xtask-driver\debug\deps\vynamp_decode-3c919457ffb95a16.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\adverse.rs (target\xtask-driver\debug\deps\adverse-067143dcfea27909.exe)
+
+running 5 tests
+
+thread 'registry_describes_only_experimental_probed_bindings' (26140) panicked at crates\vynamp-decode\tests\adverse.rs:11:5:
+assertion `left == right` failed
+  left: 0
+ right: 3
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test registry_describes_only_experimental_probed_bindings ... FAILED
+test wav32_lsb_extremes_and_negative_one_survive_without_float_conversion ... ok
+test byte_frame_rate_and_channel_budgets_reject_before_returning_pcm ... ok
+test stale_generation_never_returns_pcm_and_can_restart_with_new_generation ... ok
+test invalid_and_truncated_streams_are_errors_not_partial_success ... ok
+
+failures:
+
+failures:
+    registry_describes_only_experimental_probed_bindings
+
+test result: FAILED. 4 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+error: test failed, to rerun pass `-p vynamp-decode --test adverse`

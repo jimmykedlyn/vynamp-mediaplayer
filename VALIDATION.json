@@ -9,7 +9,7 @@
     "macOS Apple Silicon arm64",
     "Android arm64-v8a"
   ],
-  "markdown_files": 304,
+  "markdown_files": 308,
   "openapi_paths": 25,
   "operation_count": 26,
   "phases": {

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "E01-01 synthetic decode corpus inventory",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "task", "requirement", "qa", "origin", "permission", "generator", "ffmpeg_version", "ffmpeg_sha256", "command", "oracle", "files", "fixtures"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "task": {"const": "TASK-E01-01"},
+    "requirement": {"const": "REQ-E01-01"},
+    "qa": {"type": "array", "items": {"enum": ["QA-001", "QA-002", "QA-004"]}, "minItems": 3, "uniqueItems": true},
+    "origin": {"type": "string", "minLength": 1},
+    "permission": {"type": "string", "minLength": 1},
+    "generator": {"type": "string", "minLength": 1},
+    "ffmpeg_version": {"type": "string", "minLength": 1},
+    "ffmpeg_sha256": {"$ref": "#/$defs/hash"},
+    "command": {"type": "string", "minLength": 1},
+    "oracle": {"type": "string", "minLength": 1},
+    "files": {
+      "type": "object", "minProperties": 1,
+      "propertyNames": {"$ref": "#/$defs/path"},
+      "additionalProperties": {
+        "type": "object", "additionalProperties": false,
+        "required": ["sha256", "bytes"],
+        "properties": {"sha256": {"$ref": "#/$defs/hash"}, "bytes": {"type": "integer", "minimum": 1}}
+      }
+    },
+    "fixtures": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "path", "reference", "source", "format", "sample_type", "frames", "rate", "channels", "max_abs_error"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^decode-"},
+          "path": {"$ref": "#/$defs/path"}, "reference": {"$ref": "#/$defs/path"}, "source": {"$ref": "#/$defs/path"},
+          "format": {"enum": ["wav", "flac", "mp3"]},
+          "sample_type": {"enum": ["i32-msb", "f32"]},
+          "frames": {"type": "integer", "minimum": 1}, "rate": {"const": 44100}, "channels": {"const": 2},
+          "bits": {"enum": [24, 32]}, "profile": {"type": "string", "minLength": 1},
+          "max_abs_error": {"type": "number", "minimum": 0, "maximum": 0.00002}, "trim_unknown": {"type": "boolean"}, "expected_error": {"const": "Unsupported"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "path": {"type": "string", "pattern": "^tests/fixtures/audio/decode/[a-zA-Z0-9.-]+$"}
+  }
+}

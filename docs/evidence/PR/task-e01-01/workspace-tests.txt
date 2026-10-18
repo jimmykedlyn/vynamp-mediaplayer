@@ -1,0 +1,130 @@
+   Compiling jsonschema v0.33.0
+   Compiling vynamp-decode v0.0.0 (D:\Projects\vynamp-media-player\repo\.worktrees\codex\task-e01-01-decode\crates\vynamp-decode)
+   Compiling xtask v0.7.0 (D:\Projects\vynamp-media-player\repo\.worktrees\codex\task-e01-01-decode\xtask)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 46.52s
+     Running unittests src\lib.rs (target\xtask-driver\debug\deps\vynamp_decode-7d4d3930361ecb49.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\adverse.rs (target\xtask-driver\debug\deps\adverse-ee04da4b171dc095.exe)
+
+running 6 tests
+test registry_describes_only_experimental_probed_bindings ... ok
+test mp3_without_trustworthy_trim_is_rejected_instead_of_partial_success ... ok
+test byte_frame_rate_and_channel_budgets_reject_before_returning_pcm ... ok
+test stale_generation_never_returns_pcm_and_can_restart_with_new_generation ... ok
+test wav32_lsb_extremes_and_negative_one_survive_without_float_conversion ... ok
+test invalid_and_truncated_streams_are_errors_not_partial_success ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\corpus.rs (target\xtask-driver\debug\deps\corpus-257bb0ba51e734f3.exe)
+
+running 3 tests
+test real_corpus_matches_independent_reference_and_frame_counts ... ok
+test gapless_pairs_match_concatenated_references_without_dropped_or_inserted_frames ... ok
+test fixture_hashes_sizes_and_provenance_are_pinned ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.16s
+
+     Running unittests src\main.rs (target\xtask-driver\debug\deps\xtask-5600e30963b2ea26.exe)
+
+running 39 tests
+test agents::tests::real_codex_manager_output_is_confirmed ... ok
+test agents::tests::plugin_unknown_or_disabled_is_not_installed ... ok
+test agents::tests::claude_entry_of_another_project_does_not_count ... ok
+test branding::tests::native_gate_rejects_empty_icon_containers_and_non_svg_xml ... ok
+test branding::tests::native_svg_rejects_active_content_and_accepts_static_geometry ... ok
+test agents::tests::lock_pins_each_agent_separately ... ok
+test catalog::tests::canonical_planning_catalog_passes ... ok
+test catalog::tests::duplicate_id_and_missing_required_platform_rejected ... ok
+test catalog::tests::incorrect_format_category_and_webm_binding_rejected ... ok
+test ci::docs_target_tests::checks_do_not_rebuild_the_running_driver ... ok
+test ci::docs_target_tests::separate_worktrees_have_separate_check_caches ... ok
+test github::import_branch_tests::existing_remote_bootstrap_branches_are_preserved ... ok
+test github::brand_migration_tests::overlay_removes_previous_brand_templates ... ok
+test github::tests::overlay_removes_legacy_readme_and_preserves_unrelated_files ... ok
+test release::tests::digest_covers_xtask_and_ignores_activation_flags ... ok
+test repo::github_policy_tests::delete_branch_on_merge_drift_is_pending ... ok
+test repo::github_policy_tests::fully_enforced_gitflow_has_no_pending_items ... ok
+test repo::github_policy_tests::plan_limit_and_settings_drift_are_reported_not_hidden ... ok
+test release::tests::manifest_requires_exact_nonempty_set ... ok
+test repo::github_policy_tests::plan_limited_protection_is_recognised ... ok
+test repo::github_policy_tests::protection_keeping_stale_reviews_is_incomplete ... ok
+test repo::github_policy_tests::protection_without_ci_gate_or_allowing_force_push_is_incomplete ... ok
+test repo::github_policy_tests::protection_without_conversation_resolution_is_incomplete ... ok
+test repo::github_policy_tests::protection_without_required_pull_request_is_incomplete ... ok
+test repo::github_policy_tests::public_repository_is_pending ... ok
+test repo::github_policy_tests::solo_review_count_zero_still_counts_as_applied ... ok
+test util::tests::distribution_scan_excludes_synthetic_credentials ... ok
+test util::tests::windows_npm_shim_is_resolved_through_pathext ... ok
+test util::windows_command_path_tests::git_arguments_use_normal_drive_and_unc_paths ... ok
+test util::windows_command_path_tests::unix_paths_and_unsupported_windows_namespaces_are_not_reinterpreted ... ok
+test catalog::tests::bluetooth_cannot_be_file_handler_and_oversized_request_rejected ... ok
+test catalog::tests::multibyte_locators_and_envelope_limits_are_bytes ... ok
+test validate::tests::draft_schema_rejects_invalid_example_and_format ... ok
+test catalog::tests::visualizer_preset_cannot_embed_code_or_unbounded_fft ... ok
+test validate::tests::invalid_schema_rejected ... ok
+Initialized empty Git repository in D:/Projects/vynamp-media-player/.cache/tmp/.tmphzRCYH/empty source with spaces/
+test catalog::tests::planned_capability_cannot_advertise_availability ... ok
+Cloning into 'D:\Projects\vynamp-media-player\.cache\tmp\.tmphzRCYH\Vynamp clone with spaces'...
+warning: You appear to have cloned an empty repository.
+done.
+test util::windows_command_path_tests::native_git_clone_accepts_canonical_windows_destination ... ok
+test branding::tests::icns_requires_retina_roles_in_addition_to_pixel_sizes ... ok
+test branding::tests::native_gate_accepts_decodable_multisize_png_icon_containers ... ok
+
+test result: ok. 39 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.64s
+
+     Running tests\tooling.rs (target\xtask-driver\debug\deps\tooling-5914496c9cfc774a.exe)
+
+running 39 tests
+test excluded_desktop_package_does_not_activate_core_ci ... ok
+test desktop_detection_parses_a_real_manifest ... ok
+test commit_on_main_is_blocked_after_bootstrap ... ok
+test concurrent_task_claim_has_one_winner ... ok
+test failed_creation_preserves_existing_resources_and_releases_own_claim ... ok
+test fixtures_are_isolated_from_hook_repository_environment ... ok
+test init_creates_main_develop_without_remote ... ok
+test agents_have_independent_files_and_indexes ... ok
+test hotfix_merged_only_to_main_is_preserved ... ok
+test interrupted_claim_is_preserved_without_automatic_takeover ... ok
+test invalid_worktree_arguments_have_no_side_effects ... ok
+test no_nested_worktrees ... ok
+test hotfix_requires_both_main_and_develop ... ok
+test integrated_feature_removal_cleans_only_its_resources ... ok
+test prepare_agents_preserves_dirty_import_checkout ... ok
+test release_blocks_pending_native_branding_exports ... ok
+test prepare_agents_rejects_claim_without_codex_index ... ok
+test release_cannot_publish_unimplemented_player ... ok
+test prepare_agents_adopts_numbered_import_branch ... ok
+test prepare_agents_isolates_bootstrap_and_reviewer_and_can_resume ... ok
+test prepare_agents_rejects_plain_reviewer_folder ... ok
+test prepare_agents_reuses_import_branch_when_develop_is_absent ... ok
+test removal_by_other_owner_preserves_claim_and_worktree ... ok
+test dirty_worktree_is_preserved ... ok
+test removal_preserves_detached_worktree ... ok
+test removal_preserves_inconsistent_base ... ok
+test removal_preserves_foreign_repository_and_claim ... ok
+test removal_preserves_inconsistent_task ... ok
+test removal_preserves_inconsistent_branch ... ok
+test vynamp_zip_uses_new_root_and_contains_approved_branding ... ok
+test renamed_product_honors_legacy_task_claims ... ok
+test xtask_workspace_does_not_activate_player_ci ... ok
+test traversal_and_unknown_task_create_no_branch ... ok
+test removal_preflights_configured_upstream ... ok
+test removal_preserves_switched_worktree ... ok
+test windows_autocrlf_keeps_release_sources_identical ... ok
+test task_has_only_one_owner ... ok
+test unmerged_worktree_is_preserved ... ok
+test removal_preserves_integrated_feature_when_central_head_is_unmerged ... ok
+
+test result: ok. 39 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 48.89s
+
+   Doc-tests vynamp_decode
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s

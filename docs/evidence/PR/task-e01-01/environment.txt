@@ -1,0 +1,11 @@
+Author capture: Codex TASK-E01-01, 2026-10-18; before final commit.
+OS=Microsoft Windows NT 10.0.26300.0
+ProcessArchitecture=X64
+PowerShell=7.4.20
+rustc 1.99.0 (b940084d7 2026-09-28) binary: rustc commit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4 commit-date: 2026-09-28 host: x86_64-pc-windows-msvc release: 1.99.0 LLVM version: 23.1.1
+cargo 1.99.0 (5f94df478 2026-08-27)
+git version 2.47.1.windows.2
+HEAD at capture=8024bdc2363d9d9b489a3b0d553fb59d2b127703
+branch=feature/task-e01-01-codex-decode
+driver target=<this worktree>/target/xtask-driver; ci target=<this worktree>/target/xtask-ci
+TMP/TEMP=D:/Projects/vynamp-media-player/.cache/tmp; no audio hardware exercised.

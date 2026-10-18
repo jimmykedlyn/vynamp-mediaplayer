@@ -4,7 +4,7 @@ Versão 0.7.0 · 176 requisitos e tarefas planejados, 17 épicos. Configuração
 
 | Requisito | Resultado | Fase | Aceite | Tarefa | Spec |
 |---|---|---|---|---|---|
-| REQ-E01-01 | Provar decode, gapless e precisão de samples | M0 | FLAC/MP3/WAV decodificam contra referência; delay/padding e PCM24/32 preservados quando perfil permite. | [TASK-E01-01](../../tasks/items/TASK-E01-01.md) | [Spec](../../docs/audio/01-engine.md) |
+| REQ-E01-01 | Provar decode, gapless e precisão de samples | M0 | FLAC/MP3/WAV decodificam contra referência; delay/padding e PCM24/32 preservados quando perfil permite. Prova numérica offline em revisão: [evidência](../evidence/PR/task-e01-01/README.md); FLAC32 e hardware pendentes. | [TASK-E01-01](../../tasks/items/TASK-E01-01.md) | [Spec](../../docs/audio/01-engine.md) |
 | REQ-E01-02 | Provar callback e output clock | M0 | Nenhum lock/alloc/I/O na callback; clock deriva consumo e device latency; underrun gera zeros sem replay. | [TASK-E01-02](../../tasks/items/TASK-E01-02.md) | [Spec](../../docs/audio/01-engine.md) |
 | REQ-E01-03 | Implementar state machine e generation cancellation | M1 | Stop durante Opening cancela tudo; seek/troca descarta buffers antigos; repeated stop é idempotente. | [TASK-E01-03](../../tasks/items/TASK-E01-03.md) | [Spec](../../docs/audio/01-engine.md) |
 | REQ-E01-04 | Entregar fonte local e decoder registry | M1 | Extensão incorreta permite sniff; corrupt/oversized falham com erro tipado; decoder lista perfis reais. | [TASK-E01-04](../../tasks/items/TASK-E01-04.md) | [Spec](../../docs/audio/01-engine.md) |

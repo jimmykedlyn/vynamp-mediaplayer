@@ -1,0 +1,48 @@
+   Compiling bytemuck v1.25.2
+   Compiling smallvec v1.16.3
+   Compiling regex-lite v0.1.9
+   Compiling num-traits v0.2.19
+   Compiling serde_core v1.0.229
+   Compiling extended v0.1.0
+   Compiling memchr v2.8.3
+   Compiling num-complex v0.4.6
+   Compiling symphonia-core v0.6.1
+   Compiling serde_json v1.0.154
+   Compiling symphonia-metadata v0.6.1
+   Compiling symphonia-codec-pcm v0.6.1
+   Compiling symphonia-bundle-mp3 v0.6.1
+   Compiling symphonia-common v0.6.1
+   Compiling symphonia-format-riff v0.6.1
+   Compiling symphonia-bundle-flac v0.6.1
+   Compiling symphonia v0.6.1
+   Compiling vynamp-decode v0.0.0 (D:\Projects\vynamp-media-player\repo\.worktrees\codex\task-e01-01-decode\crates\vynamp-decode)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 18.97s
+     Running unittests src\lib.rs (target\xtask-driver\debug\deps\vynamp_decode-3c919457ffb95a16.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\corpus.rs (target\xtask-driver\debug\deps\corpus-501d210b8d5f7f74.exe)
+
+running 3 tests
+
+thread 'real_corpus_matches_independent_reference_and_frame_counts' (35664) panicked at crates\vynamp-decode\tests\corpus.rs:26:123:
+tests/fixtures/audio/decode/pcm24-a.wav: Unsupported
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'gapless_pairs_match_concatenated_references_without_dropped_or_inserted_frames' (17772) panicked at crates\vynamp-decode\tests\corpus.rs:64:131:
+called `Result::unwrap()` on an `Err` value: Unsupported
+test real_corpus_matches_independent_reference_and_frame_counts ... FAILED
+test gapless_pairs_match_concatenated_references_without_dropped_or_inserted_frames ... FAILED
+test fixture_hashes_sizes_and_provenance_are_pinned ... ok
+
+failures:
+
+failures:
+    gapless_pairs_match_concatenated_references_without_dropped_or_inserted_frames
+    real_corpus_matches_independent_reference_and_frame_counts
+
+test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
+error: test failed, to rerun pass `-p vynamp-decode --test corpus`

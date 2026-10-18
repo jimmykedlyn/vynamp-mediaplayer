@@ -1,0 +1,4 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.58s
+     Running `target\xtask-driver\debug\xtask.exe doctor --agent both`
+codex: plugin manager confirmed Superpowers; confirm skill discovery in session
+claude: plugin manager confirmed Superpowers; confirm skill discovery in session

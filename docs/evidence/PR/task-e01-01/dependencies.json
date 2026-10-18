@@ -1,0 +1,132 @@
+{
+  "task": "TASK-E01-01",
+  "scope": "Normal/runtime dependency closure for offline decode crate; no release clearance; final source license undecided",
+  "dependencies": [
+    {
+      "name": "bitflags",
+      "version": "2.13.2",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/bitflags/bitflags"
+    },
+    {
+      "name": "bytemuck",
+      "version": "1.25.2",
+      "license": "Zlib OR Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/Lokathor/bytemuck"
+    },
+    {
+      "name": "extended",
+      "version": "0.1.0",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/depp/extended-rs"
+    },
+    {
+      "name": "lazy_static",
+      "version": "1.5.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/rust-lang-nursery/lazy-static.rs"
+    },
+    {
+      "name": "log",
+      "version": "0.4.34",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/rust-lang/log"
+    },
+    {
+      "name": "num-complex",
+      "version": "0.4.6",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/rust-num/num-complex"
+    },
+    {
+      "name": "num-traits",
+      "version": "0.2.19",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/rust-num/num-traits"
+    },
+    {
+      "name": "regex-lite",
+      "version": "0.1.9",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/rust-lang/regex"
+    },
+    {
+      "name": "smallvec",
+      "version": "1.16.3",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/servo/rust-smallvec"
+    },
+    {
+      "name": "symphonia",
+      "version": "0.6.1",
+      "license": "MPL-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/pdeljanov/Symphonia"
+    },
+    {
+      "name": "symphonia-bundle-flac",
+      "version": "0.6.1",
+      "license": "MPL-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/pdeljanov/Symphonia"
+    },
+    {
+      "name": "symphonia-bundle-mp3",
+      "version": "0.6.1",
+      "license": "MPL-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/pdeljanov/Symphonia"
+    },
+    {
+      "name": "symphonia-codec-pcm",
+      "version": "0.6.1",
+      "license": "MPL-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/pdeljanov/Symphonia"
+    },
+    {
+      "name": "symphonia-common",
+      "version": "0.6.1",
+      "license": "MPL-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/pdeljanov/Symphonia"
+    },
+    {
+      "name": "symphonia-core",
+      "version": "0.6.1",
+      "license": "MPL-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/pdeljanov/Symphonia"
+    },
+    {
+      "name": "symphonia-format-riff",
+      "version": "0.6.1",
+      "license": "MPL-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/pdeljanov/Symphonia"
+    },
+    {
+      "name": "symphonia-metadata",
+      "version": "0.6.1",
+      "license": "MPL-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/pdeljanov/Symphonia"
+    },
+    {
+      "name": "vynamp-decode",
+      "version": "0.0.0",
+      "license": null,
+      "source": null,
+      "repository": null
+    }
+  ]
+}
