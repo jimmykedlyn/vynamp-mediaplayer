@@ -1,6 +1,6 @@
 # TASK-E01-02 — Provar callback e output clock
 
-Versão: 0.7.0 · Atualização: 2026-10-18 · Estado: em execução; spike implementado e medido em Windows/WASAPI, revisão Codex/CI/integração pendentes, sem aceite antecipado.
+Versão: 0.7.0 · Atualização: 2026-10-18 · Estado: em execução; spike implementado e medido em Windows/WASAPI, revisão, CI e integração pendentes, sem aceite antecipado.
 
 ## Contrato da tarefa
 
@@ -34,3 +34,7 @@ QA-001, QA-003 em [QA comum](../../docs/quality/01-test-strategy.md) e [matriz m
 ## Execução e limites
 
 Confirmar ports/contratos e dependências; decompor itens grandes em slices de 1–3 dias; implementar sucesso e erro/cancelamento; executar os critérios apropriados; atualizar schema/docs/notices; aceitar somente com evidência e revisão. Preservar dados, budgets e acessibilidade. Stubs/botões desabilitados não contam. Esforço é estimativa, não data prometida. Atualizar backlog JSON e requisito junto de qualquer mudança.
+
+## Limitação conhecida
+
+Viés conhecido do relógio (correção adiada para a E01-05, drenagem): `presented = conteúdo escrito antes da callback − latência` supõe que a fila do dispositivo contém só conteúdo. Silêncio de underrun/drenagem enfileirado também compõe a latência reportada, então `presented` fica subestimado em no máximo `latency_frames` (limitado pela latência do dispositivo; ≈12 300–12 800 frames no hardware medido): após underrun atrasa até a latência inteira, e na drenagem estabiliza em `content_frames − latency_frames` sem alcançar `content_frames`. Nunca superestima nem regride. Caracterizado por `presented_bias_with_queued_silence_is_bounded_by_latency`; sem redesenho nesta TASK.

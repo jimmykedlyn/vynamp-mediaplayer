@@ -12,7 +12,7 @@ Provar, antes de congelar o ADR-002, que a callback de áudio pode consumir PCM 
 - Não objetivos: decode (TASK-E01-01), generation/cancelamento/state machine (TASK-E01-03), mixer/drain completo (TASK-E01-05), resampler (TASK-E04-02), exclusivo/WASAPI dedicado, fade de recuperação de underrun, UI.
 - Anti-objetivos: chamar o spike de player; aprovar hardware/targets não executados; testar apenas um espelho da implementação; Cargo.lock escrito à mão.
 
-## Decisões (escolhas do autor, revisáveis pelo Codex)
+## Decisões (escolhas do autor, revisáveis na revisão)
 
 1. **Crates** conforme [arquitetura](../../architecture/01-system.md): `crates/vynamp-audio` (sem dependências: ring, clock, renderer, stats, instrumentação RT, harness simulado) e `crates/vynamp-output` (conversão de formato e cálculo de latência puros; backend CPAL atrás da feature `cpal`, desligada por padrão).
 2. **Ring SPSC próprio** (contadores monotônicos `AtomicUsize`, Acquire/Release, `Box<[UnsafeCell<f32>]>` alocado só na construção). Evita dependência para ~150 linhas auditáveis; teste de stress com threads e oráculo de rampa.
@@ -24,7 +24,11 @@ Provar, antes de congelar o ADR-002, que a callback de áudio pode consumir PCM 
 8. **Probe real** (`vynamp-output`, exemplo `output_probe`, feature `cpal`): abre o dispositivo padrão shared, produz sinal de amplitude configurável (padrão 0.0, inaudível), mede alocações na callback, histograma de duração versus período, underruns, latência e relógio; grava JSON. Um modo com produtor pausado induz underrun real.
 9. **CI**: `cargo xtask ci docs` passa a testar `--workspace` em vez de só `xtask`, para que os testes dos novos crates rodem nos quatro hosts de tooling.
 
-## Coordenação com TASK-E01-01 (Codex)
+## Limitação conhecida (pós-revisão)
+
+Viés conhecido do relógio (correção adiada para a E01-05, drenagem): `presented = conteúdo escrito antes da callback − latência` supõe que a fila do dispositivo contém só conteúdo. Silêncio de underrun/drenagem enfileirado também compõe a latência reportada, então `presented` fica subestimado em no máximo `latency_frames` (limitado pela latência do dispositivo; ≈12 300–12 800 frames no hardware medido): após underrun atrasa até a latência inteira, e na drenagem estabiliza em `content_frames − latency_frames` sem alcançar `content_frames`. Nunca superestima nem regride. Caracterizado por `presented_bias_with_queued_silence_is_bounded_by_latency`; sem redesenho nesta TASK.
+
+## Coordenação com TASK-E01-01
 
 Reservas E01-02: `crates/vynamp-audio/`, `crates/vynamp-output/`, `docs/evidence/PR/task-e01-02/`, este design e seu plano, entrada TASK-E01-02 em `tasks/backlog.json`, linha REQ-E01-02 em `docs/product/03-requirements.md`, `tasks/items/TASK-E01-02.md`, e a troca `--package xtask` → `--workspace` em `xtask/src/ci.rs`. Compartilhados serializados: `Cargo.toml` (uma linha de membro por TASK), `Cargo.lock` (regenerado pelo Cargo, nunca à mão; quem integrar por último resolve por `cargo metadata --locked` após merge), `VALIDATION.json` (regenerado por `ci docs`). ADR-002 fica com a E01-01; a E01-02 entrega sua proposta de saída na evidência para o congelamento. Registro no painel do guia externo.
 

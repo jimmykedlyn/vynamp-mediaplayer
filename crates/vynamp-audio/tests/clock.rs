@@ -53,13 +53,20 @@ fn presented_is_monotonic_when_latency_grows() {
 
 #[test]
 fn concurrent_reader_sees_consistent_snapshot() {
+    use std::sync::Arc;
+    use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+    // The writer keeps publishing until the reader has completed MIN_READS
+    // (bounded by MAX_PUBLISHES), so the reader is guaranteed to run no matter
+    // how the scheduler orders the threads.
+    const MIN_READS: u64 = 1_000;
+    const MAX_PUBLISHES: u64 = 50_000_000;
     let (mut w, r) = clock::clock();
-    let stop = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
-    let flag = stop.clone();
+    let stop = Arc::new(AtomicBool::new(false));
+    let reads_done = Arc::new(AtomicU64::new(0));
+    let (flag, progress) = (stop.clone(), reads_done.clone());
     let reader = std::thread::spawn(move || {
-        let mut reads = 0u64;
         let mut last = 0u64;
-        while !flag.load(std::sync::atomic::Ordering::Relaxed) {
+        while !flag.load(Ordering::Relaxed) {
             let s = r.snapshot();
             // Writer always publishes content == 2 * callbacks and silence == callbacks.
             assert_eq!(s.content_frames, 2 * s.callbacks, "torn snapshot");
@@ -67,13 +74,55 @@ fn concurrent_reader_sees_consistent_snapshot() {
             assert!(s.presented_frames <= s.content_frames);
             assert!(s.presented_frames >= last, "presented regressed");
             last = s.presented_frames;
-            reads += 1;
+            progress.fetch_add(1, Ordering::Release);
         }
-        reads
     });
-    for _ in 0..200_000 {
+    let mut published = 0u64;
+    while published < MAX_PUBLISHES
+        && (published < 200_000 || reads_done.load(Ordering::Acquire) < MIN_READS)
+    {
         w.publish(2, 1, 3);
+        published += 1;
+        if published % 1024 == 0 {
+            std::thread::yield_now();
+        }
     }
-    stop.store(true, std::sync::atomic::Ordering::Relaxed);
-    assert!(reader.join().unwrap() > 0);
+    stop.store(true, Ordering::Relaxed);
+    reader.join().unwrap();
+    assert!(
+        reads_done.load(Ordering::Acquire) >= MIN_READS,
+        "reader starved: {} reads after {published} publishes",
+        reads_done.load(Ordering::Acquire)
+    );
+}
+
+/// Characterizes a known limitation (deferred to TASK-E01-05): `presented`
+/// subtracts the full reported latency from content written, assuming the
+/// device queue holds only content. Queued underrun/drain silence therefore
+/// biases `presented` low by at most `latency_frames`.
+#[test]
+fn presented_bias_with_queued_silence_is_bounded_by_latency() {
+    let latency = 1_000u64;
+    // Steady state: bias-free.
+    let (mut w, r) = clock::clock();
+    for _ in 0..10 {
+        w.publish(500, 0, latency);
+    }
+    assert_eq!(r.snapshot().presented_frames, 4_500 - latency); // 9 * 500 before last
+    // Underrun: silence is queued; the device still plays earlier content, but
+    // the estimate keeps subtracting the full latency, so it lags.
+    for _ in 0..4 {
+        w.publish(0, 500, latency);
+    }
+    let s = r.snapshot();
+    assert_eq!(s.content_frames, 5_000);
+    assert_eq!(s.presented_frames, 5_000 - latency);
+    // Truth after the queue drains would be 5_000; the shortfall equals latency.
+    assert!(s.content_frames - s.presented_frames <= latency);
+    // Drain: after the final content, presented never reaches content_frames.
+    for _ in 0..10 {
+        w.publish(0, 500, latency);
+    }
+    let s = r.snapshot();
+    assert_eq!(s.presented_frames, s.content_frames - latency);
 }

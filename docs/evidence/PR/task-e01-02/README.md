@@ -1,14 +1,14 @@
 # TASK-E01-02 — callback e output clock
 
-Autor: Claude (owner), 2026-10-18. Branch `feature/task-e01-02-claude-callback`, worktree `D:\Projects\vynamp-media-player\repo\.worktrees\claude\task-e01-02-callback`, base `8024bdc2363d9d9b489a3b0d553fb59d2b127703` (merge PR12, develop). Este snapshot não contém o próprio SHA final; head/PR/revisão ficam no guia externo e no PR. Spike de M0: não é player, não altera flags de prontidão e não aceita a TASK sem revisão Codex, CI e integração.
+Autor: Claude (owner), 2026-10-18. Branch `feature/task-e01-02-claude-callback`, worktree `D:\Projects\vynamp-media-player\repo\.worktrees\claude\task-e01-02-callback`, base `8024bdc2363d9d9b489a3b0d553fb59d2b127703` (merge PR12, develop). Este snapshot não contém o próprio SHA final; head/PR/revisão ficam no guia externo e no PR. Spike de M0: não é player, não altera flags de prontidão e não aceita a TASK sem revisão, CI e integração.
 
 ## Descoberta, isolamento e baseline
 
 - Skills Superpowers 7.0.0 carregadas nesta sessão: using-superpowers, brainstorming, writing-plans, test-driven-development (e verification-before-completion antes do handoff). Design: [spec](../../../superpowers/specs/2026-10-18-e01-02-callback-clock-design.md); plano: [plano](../../../superpowers/plans/2026-10-18-e01-02-callback-clock.md). Execução inline pelo owner; nenhum subagente.
-- Isolamento conferido antes de editar: HEAD=origin/develop=`8024bdc…` após `git fetch`, árvore limpa, git-dir `.git/worktrees/task-e01-02-callback` distinto do common dir, claim `.git/auralis/claims/TASK-E01-02/owner.json` = claude/TASK-E01-02/branch/path esperados. Worktree E01-01 (Codex) apenas inspecionada em leitura (limpa, sem commits). Reservas de arquivos registradas no painel do guia externo.
+- Isolamento conferido antes de editar: HEAD=origin/develop=`8024bdc…` após `git fetch`, árvore limpa, git-dir `.git/worktrees/task-e01-02-callback` distinto do common dir, claim `.git/auralis/claims/TASK-E01-02/owner.json` = claude/TASK-E01-02/branch/path esperados. Worktree E01-01 apenas inspecionada em leitura (limpa, sem commits). Reservas de arquivos registradas no painel do guia externo.
 - Dependência TASK-E11-01: PR11 integrado em develop (registro do guia); base contém o merge.
 - CI pós-merge da base: run 39152762151, `completed/success`, head `8024bdc…` (consulta `gh run view`).
-- Baseline próprio antes de qualquer arquivo de feature, Windows, `CARGO_TARGET_DIR` da worktree: `cargo xtask doctor --agent both` exit 0 (managers confirmam Superpowers para codex e claude); `cargo xtask ci docs` exit 0 (spec/delivery sem erros, fmt, clippy, 39 unitários + 39 integração do xtask).
+- Baseline próprio antes de qualquer arquivo de feature, Windows, `CARGO_TARGET_DIR` da worktree: `cargo xtask doctor --agent both` exit 0 (managers confirmam Superpowers); `cargo xtask ci docs` exit 0 (spec/delivery sem erros, fmt, clippy, 39 unitários + 39 integração do xtask).
 
 ## Entrega
 
@@ -60,9 +60,15 @@ Saída shared via CPAL 0.18.2 (Apache-2.0) como adapter atrás de feature; callb
 - Hardware medido: somente este Windows x64 com um DAC USB em shared mode. Linux (ALSA/PipeWire), macOS Intel/Apple Silicon e Android ficam pendentes; CI não compila o adapter CPAL (feature desligada, sem headers ALSA). Execução de 8 h e carga de CPU do gate não foram feitas.
 - A instrumentação de alocação cobre o código Vynamp dentro do closure; heap de CPAL/OS ao redor não é medido. Lock/I/O são provados por construção e guard estático complementar, não por interceptação do OS.
 - `stats` do renderer contam blocos de conversão; o probe usa a duração da callback inteira (`device_callbacks`).
+- Viés conhecido do relógio (correção adiada para a E01-05, drenagem): `presented = conteúdo escrito antes da callback − latência` supõe que a fila do dispositivo contém só conteúdo. Silêncio de underrun/drenagem enfileirado também compõe a latência reportada, então `presented` fica subestimado em no máximo `latency_frames` (limitado pela latência do dispositivo; ≈12 300–12 800 frames no hardware medido): após underrun atrasa até a latência inteira, e na drenagem estabiliza em `content_frames − latency_frames` sem alcançar `content_frames`. Nunca superestima nem regride. Caracterizado por `presented_bias_with_queued_silence_is_bounded_by_latency`; sem redesenho nesta TASK.
+- `callbacks` do `ClockSnapshot` conta chunks de render (um por bloco de scratch), não callbacks do dispositivo; o probe usa `device_callbacks` para estas.
 - Relógio é amostrado no instante da callback; interpolação entre callbacks, generation/cancelamento (E01-03), fade de recuperação de underrun, mixer/drain completo (E01-05) e resampler (E04-02) estão fora do escopo.
 - `Cargo.lock` ganhou 51 pacotes resolvidos para todas as plataformas do CPAL; licenças/inventário transitivo pertencem à TASK-E11-03. Flags `application_ready`/`release_enabled` permanecem false.
 
 ## Incidente de CI e correção
 
 CI [39156053036](https://github.com/jimmykedlyn/vynamp-mediaplayer/actions/runs/39156053036) do head `c0a5cbb` falhou só em `tooling (windows-2022)`: `render_allocates_nothing` contou 2 eventos. Causa raiz: o teste media o contador global de processo, e `counter_detects_allocation_inside_section`, rodando em paralelo no mesmo binário, fez exatamente um alloc+dealloc dentro da própria seção. Era corrida de medição entre testes, não alocação do render (os 40+40 reruns locais não reproduziram). Correção: o contador por thread `rt::thread_rt_alloc_events()` passou a ser usado nos testes e no harness, onde a callback roda na própria thread de medição. O contador global continua no probe, onde só a thread CPAL entra em seção. Regressão `thread_counter_ignores_other_threads_sections` (RED por API ausente e depois verde); uma mutação com alocação no render continua detectada (`render path allocated` e harness com 202 eventos).
+
+## Correção pós-revisão: teste de relógio instável
+
+`concurrent_reader_sees_consistent_snapshot` falhava em ~5/30 execuções: o escritor concluía as 200 000 publicações antes da thread leitora ser escalonada (0 leituras, `assert!(reads > 0)`), o que tornava `cargo xtask ci docs` instável. Agora o escritor publica até o leitor completar 1 000 leituras (mínimo de 200 000 publicações, teto de 50 000 000) e cede a CPU periodicamente; o resultado é determinístico quanto ao progresso do leitor. Evidência: [clock-flaky-50x.txt](clock-flaky-50x.txt) — 50 execuções de `cargo test -p vynamp-audio --test clock --locked`, 0 falhas. Também foi adicionado o teste de caracterização do viés acima.

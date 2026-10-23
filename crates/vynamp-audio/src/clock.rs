@@ -5,6 +5,14 @@
 //! is in progress. Presented position is content frames consumed by earlier device
 //! callbacks minus the latency the device reports for the current one; silence written during an
 //! underrun or drain is counted separately and never advances the position.
+//!
+//! Known limitation (correction deferred to E01-05, drain): the estimate
+//! assumes the device queue holds only content. Silence queued by an underrun
+//! or drain is also inside the reported latency, so `presented` is biased low
+//! by at most `latency_frames`: after an underrun it lags until content flows
+//! again, and during drain it settles at `content_frames - latency_frames`
+//! instead of reaching `content_frames`. Characterized by
+//! `presented_bias_with_queued_silence_is_bounded_by_latency`.
 use std::sync::Arc;
 use std::sync::atomic::{AtomicU64, Ordering, fence};
 
@@ -20,7 +28,9 @@ pub struct ClockSnapshot {
     /// Content frames played at the last callback instant: content written
     /// before it minus device latency. Monotonic; never above `content_frames`.
     pub presented_frames: u64,
-    /// Callbacks published.
+    /// Render chunks published. The output adapter renders once per scratch
+    /// chunk, so a device callback larger than the scratch buffer counts more
+    /// than once.
     pub callbacks: u64,
 }
 

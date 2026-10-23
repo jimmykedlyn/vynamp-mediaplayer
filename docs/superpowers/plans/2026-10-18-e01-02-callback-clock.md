@@ -10,7 +10,7 @@
 
 **Spec:** [design](../specs/2026-10-18-e01-02-callback-clock-design.md)
 
-**Execução:** inline pelo owner (Claude), conforme guia; revisão técnica cruzada pelo Codex no SHA final.
+**Execução:** inline pelo owner (Claude), conforme guia; revisão técnica pelo revisor no SHA final.
 
 ## Global Constraints
 
@@ -73,4 +73,8 @@
 ### Task 6: CI, docs, evidência, handoff
 
 - [ ] `xtask/src/ci.rs`: `test --workspace`; `crates/README.md`, TASK/backlog/REQ status `in_progress`, evidência README com comandos/resultados/ambiente/limites.
-- [ ] `cargo xtask ci docs` (regenera VALIDATION.json), `git diff --check`; commit; push; PR draft para develop; atualizar guia (bloco REVISAR enviar ao Codex + painel).
+- [ ] `cargo xtask ci docs` (regenera VALIDATION.json), `git diff --check`; commit; push; PR draft para develop; atualizar guia (bloco REVISAR + painel).
+
+## Limitação conhecida (pós-revisão)
+
+Viés conhecido do relógio (correção adiada para a E01-05, drenagem): `presented = conteúdo escrito antes da callback − latência` supõe que a fila do dispositivo contém só conteúdo. Silêncio de underrun/drenagem enfileirado também compõe a latência reportada, então `presented` fica subestimado em no máximo `latency_frames` (limitado pela latência do dispositivo; ≈12 300–12 800 frames no hardware medido): após underrun atrasa até a latência inteira, e na drenagem estabiliza em `content_frames − latency_frames` sem alcançar `content_frames`. Nunca superestima nem regride. Caracterizado por `presented_bias_with_queued_silence_is_bounded_by_latency`; sem redesenho nesta TASK.
