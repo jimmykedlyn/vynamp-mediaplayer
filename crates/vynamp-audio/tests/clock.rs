@@ -83,7 +83,7 @@ fn concurrent_reader_sees_consistent_snapshot() {
     {
         w.publish(2, 1, 3);
         published += 1;
-        if published % 1024 == 0 {
+        if published.is_multiple_of(1024) {
             std::thread::yield_now();
         }
     }
