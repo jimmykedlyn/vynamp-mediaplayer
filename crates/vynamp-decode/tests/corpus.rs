@@ -103,17 +103,10 @@ fn real_corpus_matches_independent_reference_and_frame_counts() {
             }
             Samples::Float(samples) => {
                 assert_eq!(f["format"], "mp3");
-                if f["trim_unknown"] == true {
-                    assert_eq!(d.delay, None);
-                    assert_eq!(d.padding, None);
-                    assert!(
-                        d.frames > 4417,
-                        "missing metadata must not infer silence trim"
-                    );
-                } else {
-                    assert!(d.delay.unwrap_or(0) > 0, "MP3 must expose trusted delay");
-                    assert!(d.padding.is_some());
-                }
+                // Fixtures without trustworthy trim metadata are Unsupported and
+                // skipped above, so every MP3 here must expose delay and padding.
+                assert!(d.delay.unwrap_or(0) > 0, "MP3 must expose trusted delay");
+                assert!(d.padding.is_some());
                 assert_eq!(samples.len() * 4, reference.len());
                 let max_error = samples
                     .iter()
@@ -136,8 +129,11 @@ fn real_corpus_matches_independent_reference_and_frame_counts() {
     }
 }
 
+// Each file is decoded separately and the results are concatenated; this checks
+// exact per-file frame counts (4417) and total length, not playback across a
+// track boundary. The MP3 oracle is agreement with the FFmpeg decoder (tolerance).
 #[test]
-fn gapless_pairs_match_concatenated_references_without_dropped_or_inserted_frames() {
+fn per_file_results_concatenate_to_the_concatenated_references_with_exact_frame_counts() {
     for (prefix, suffix) in [
         ("pcm24", ".wav"),
         ("pcm24", ".flac"),
@@ -156,7 +152,9 @@ fn gapless_pairs_match_concatenated_references_without_dropped_or_inserted_frame
                     .unwrap()
                     .to_str()
                     .unwrap();
-                name.starts_with(prefix) && name.ends_with(suffix) && f["trim_unknown"] != true
+                name.starts_with(prefix)
+                    && name.ends_with(suffix)
+                    && f["expected_error"] != "Unsupported"
             })
             .collect();
         assert_eq!(fixtures.len(), 2);

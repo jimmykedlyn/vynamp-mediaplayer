@@ -1,6 +1,6 @@
 # E01-01 — evidência de decode offline
 
-Autor Codex, 2026-10-18. Branch `feature/task-e01-01-codex-decode`, base `8024bdc2363d9d9b489a3b0d553fb59d2b127703`; worktree `D:\Projects\vynamp-media-player\repo\.worktrees\codex\task-e01-01-decode`, claim própria e índice separado. Este snapshot não contém seu próprio SHA futuro; SHA/PR/CI posterior e revisão Claude ficam no guia externo e PR. Nada aqui atribui checks ao Claude.
+Autor original 2026-10-18 (fluxo anterior de dois agentes; hoje Claude é autor e revisor únicos). Branch `feature/task-e01-01-decode`, base `8024bdc2363d9d9b489a3b0d553fb59d2b127703`; worktree `D:\Projects\vynamp-media-player\repo\.worktrees\claude\task-e01-01-decode`, claim própria e índice separado. Este snapshot não contém seu próprio SHA futuro; SHA/PR/CI posterior e revisão Claude ficam no guia externo e PR. Nada aqui atribui checks a terceiros.
 
 ## Escopo e proveniência
 
@@ -18,18 +18,18 @@ Coordenação lida no guia: E01-02 reserva vynamp-audio/vynamp-output e xtask/sr
 | MP3 CBR192k a/b | 4417 frames; delay1105/padding238; erros máximos 5.5134296e-7 / 5.066395e-7 FS | Decoder float, não lossless |
 | MP3 VBR q2 a/b | 4417 frames; delay1105/padding238; erros máximos 6.2584877e-7 / 8.046627e-7 FS | Tolerância pré-fixada2e-5 FS, sem alinhar/normalizar referência |
 | MP3 sem Xing/LAME | Recusa Unsupported para CBR curto e VBR longo; truncamentos não retornam PCM | Referências FFmpeg preservadas; sem inferência por silêncio/contagem estimada |
-| Pares WAV24/WAV32/FLAC24/MP3 CBR/VBR | 8834 frames na concatenação, contra referências concatenadas | Buffers offline; não playback, callback ou gapless em dispositivo |
+| Resultados por arquivo concatenados WAV24/WAV32/FLAC24/MP3 CBR/VBR | 4417 frames por arquivo, 8834 na concatenação, contra referências concatenadas (MP3: concordância com o decoder FFmpeg, tolerância) | Cada arquivo é decodificado separadamente; não prova gapless entre faixas, playback, callback ou dispositivo |
 | Precisão PCM32 | MIN/MAX/-1/+1 e demais LSBs preservados sem float | Não aprova captura transparente de DAC |
-| Erro/cancelamento/limites | Geração obsoleta/restart, limites bytes/frames/rate/canais, inválido/truncado WAV/FLAC/MP3 cobertos | Não é fuzz, isolamento de parser ou prova de cancelamento durante I/O |
+| Erro/cancelamento/limites | Geração obsoleta/restart, limites bytes/frames/rate/canais, inválido/truncado WAV/FLAC/MP3 cobertos; cancelamento durante o decode (toda leitura de WAV/FLAC/MP3) e na última leitura; limite de frames acumulados sem comprimento declarado (FLAC total_samples=0) | Não é fuzz, isolamento de parser ou cancelamento de I/O bloqueante |
 
-RED real: 2 testes de decode/pares falharam por Unsupported com adapter ainda não implementado; hash/proveniência já passavam. Depois decode/pares passaram. Registry vazio falhou (0 vs3), quatro testes adversariais já passaram por comportamento implementado no primeiro slice; esses quatro não são alegados RED próprio. Logs originais preservados em `decode-red.txt` e `registry-red.txt`. Revisão interna Codex somente leitura encontrou EOF parcial e estimativa de duração em MP3 sem Xing; regressão `mp3_without_trustworthy_trim_is_rejected_instead_of_partial_success` falhou por retorno Ok antes de restringir o adapter (`no-xing-red.txt`). Decisão: perfil sem metadados explícitos Unsupported, documentado no ADR; suporte amplo fica pendente. Schema é caracterização adicional, não regressão com RED observado. Clippy inicial rejeitou chunks_exact constante; migração para as_chunks conforme Rust1.99, sem alterar oráculo. Captura ci docs intermediária falhou por fmt após mudanças de revisão; substituída por captura final após fmt, sem ocultar a tentativa.
+RED real: 2 testes de decode/pares falharam por Unsupported com adapter ainda não implementado; hash/proveniência já passavam. Depois decode/pares passaram. Registry vazio falhou (0 vs3), quatro testes adversariais já passaram por comportamento implementado no primeiro slice; esses quatro não são alegados RED próprio. Logs originais preservados em `decode-red.txt` e `registry-red.txt`. Revisão interna somente leitura encontrou EOF parcial e estimativa de duração em MP3 sem Xing; regressão `mp3_without_trustworthy_trim_is_rejected_instead_of_partial_success` falhou por retorno Ok antes de restringir o adapter (`no-xing-red.txt`). Decisão: perfil sem metadados explícitos Unsupported, documentado no ADR; suporte amplo fica pendente. Schema é caracterização adicional, não regressão com RED observado. Clippy inicial rejeitou chunks_exact constante; migração para as_chunks conforme Rust1.99, sem alterar oráculo. Captura ci docs intermediária falhou por fmt após mudanças de revisão; substituída por captura final após fmt, sem ocultar a tentativa.
 
 ## Checks finais
 
 Capturas finais próprias, todas exit0, após correção da revisão interna:
 
 - [Ambiente](environment.txt): Windows26300 x86_64, PowerShell7.4.20, Rust1.99.0/MSVC, branch e HEAD da base no momento da captura.
-- [Doctor](doctor.txt): `cargo xtask doctor --agent both`; managers confirmados, discovery de sessão apenas Codex.
+- [Doctor](doctor.txt): `cargo xtask doctor --agent both`; managers confirmados, discovery de sessão apenas do autor original.
 - [Decode](decode-tests.txt): `cargo test -p vynamp-decode --locked -- --nocapture`; 6 adversariais+3 corpus, hashes/schema/12 fixtures, números por formato.
 - [Gates](ci-docs.txt): `cargo xtask ci docs`; docs/config/fmt/clippy --workspace all-targets, 39 unit+39 tooling; VALIDATION308 Markdown/176 TASK/REQ, errors vazio.
 - [Workspace](workspace-tests.txt): `cargo test --workspace --locked`; 87 testes passaram (9 decoder+39 unitários xtask+39 tooling), zero falhas; doc-tests sem exemplos.
@@ -45,3 +45,11 @@ QA-002 cobre contagens/concatenação/trim de buffers desta amostra; QA-004 cobr
 Limites do adapter restringem arquivo já carregado, frames devolvidos e parâmetros antes de criar decoder; alocações internas do demuxer/decoder não são isoladas nem interrompidas no meio de um packet. Cancelamento cooperativo é checado antes/depois de probe/packets e antes do retorno; consumidor deve revalidar geração ao publicar. Mudança de configuração é rejeitada pelo adapter, mas corpus não contém fixture real de mudança durante stream; NaN/Inf têm guard sem fixture MP3 que produza esse caso. EOF sem duração confiável não prova integridade de todo arquivo adversarial. Sem promises de segurança de parser ou player.
 
 Flags application_ready/release_enabled/branding_exports_ready continuam false, sem UI/app/installer fictícios. TASK/backlog in_progress até revisão cruzada/CI/integração. Fonte final do projeto ainda sem licença escolhida. Não foi executado merge, release, bypass, force push nem edição da worktree Claude.
+
+## Correção de revisão independente (seis achados)
+
+- Cancelamento durante o decode: `decode_source` (seam `#[doc(hidden)]`, chamada por `decode`) aceita uma fonte arbitrária; os testes usam uma fonte que incrementa a geração na N-ésima leitura, para toda N de WAV24/FLAC24/MP3, sem threads nem sleeps. Sem os guards in-loop o teste falha por continuar lendo ([red in-loop](review-fix-cancel-red-inloop.txt)); sem o check final a última leitura devolve PCM ([red final](review-fix-cancel-red-final.txt)). Observação: o check do topo do loop e o pós-decode se cobrem mutuamente (nenhuma leitura ocorre entre eles), por isso o RED in-loop remove ambos.
+- Limite de frames acumulado: FLAC com `total_samples=0` (comprimento desconhecido) e `max_frames=4416` só é barrado pelo total corrente; sem o guard o decode retorna Ok ([red](review-fix-frames-red.txt)).
+- Código morto `trim_unknown` removido do teste de corpus (essas fixtures são Unsupported e puladas); teste de "gapless pairs" renomeado para refletir que concatena resultados por arquivo; wording em plano/TASK/corpus ajustado.
+- Menções a Codex neutralizadas na narrativa deste README e do plano; logs/txt capturados preservados.
+- Verde final: [review-fix-adverse-green.txt](review-fix-adverse-green.txt) e [review-fix-final-checks.txt](review-fix-final-checks.txt).

@@ -1,0 +1,50 @@
+## cargo test -p vynamp-decode --locked
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.93s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test stale_generation_never_returns_pcm_and_can_restart_with_new_generation ... ok
+test invalid_and_truncated_streams_are_errors_not_partial_success ... ok
+test registry_describes_only_experimental_probed_bindings ... ok
+test running_frame_total_is_limited_when_the_container_declares_no_length ... ok
+test mp3_without_trustworthy_trim_is_rejected_instead_of_partial_success ... ok
+test byte_frame_rate_and_channel_budgets_reject_before_returning_pcm ... ok
+test generation_change_on_the_last_read_is_never_returned_as_pcm ... ok
+test wav32_lsb_extremes_and_negative_one_survive_without_float_conversion ... ok
+test generation_change_during_decode_cancels_at_every_read_and_stops_early ... ok
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.81s
+exit=0
+## cargo test --workspace --locked
+   Compiling thiserror v2.0.21
+   Compiling thiserror-impl v2.0.21
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1m 20s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test registry_describes_only_experimental_probed_bindings ... ok
+test byte_frame_rate_and_channel_budgets_reject_before_returning_pcm ... ok
+test mp3_without_trustworthy_trim_is_rejected_instead_of_partial_success ... ok
+test stale_generation_never_returns_pcm_and_can_restart_with_new_generation ... ok
+test wav32_lsb_extremes_and_negative_one_survive_without_float_conversion ... ok
+test invalid_and_truncated_streams_are_errors_not_partial_success ... ok
+test running_frame_total_is_limited_when_the_container_declares_no_length ... ok
+test generation_change_on_the_last_read_is_never_returned_as_pcm ... ok
+exit=0
+## cargo clippy --workspace --all-targets --locked -- -D warnings
+    Checking thiserror v2.0.21
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 52.97s
+exit=0
+## cargo fmt --check
+exit=0
+## cargo xtask ci docs
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 55.19s
+  "errors": [],
+{"errors":[],"result":"passed","scope":"Structural config validation; no remote CI/signing/hardware claim","workflow_files":3}
+   Compiling thiserror v2.0.21
+   Compiling thiserror-impl v2.0.21
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1m 59s
+   Compiling thiserror v2.0.21
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2m 05s
+test agents::tests::real_codex_manager_output_is_confirmed ... ok
+test agents::tests::plugin_unknown_or_disabled_is_not_installed ... ok
+test agents::tests::lock_pins_each_agent_separately ... ok
+test branding::tests::native_gate_rejects_empty_icon_containers_and_non_svg_xml ... ok
+exit=0
+## git diff --check
+exit=0

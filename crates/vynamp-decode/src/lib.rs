@@ -11,7 +11,7 @@ use symphonia::core::{
     },
     errors::Error,
     formats::{TrackType, probe::Hint},
-    io::MediaSourceStream,
+    io::{MediaSource, MediaSourceStream},
 };
 
 #[derive(Debug, Clone, Copy)]
@@ -115,7 +115,33 @@ pub fn decode(
     if bytes.len() > limits.max_bytes {
         return Err(DecodeError::Limit);
     }
-    let stream = MediaSourceStream::new(Box::new(Cursor::new(bytes)), Default::default());
+    decode_source(
+        Box::new(Cursor::new(bytes)),
+        limits,
+        generation,
+        expected_generation,
+    )
+}
+
+/// Test seam: decode from an arbitrary source so tests can change the
+/// generation deterministically while the decode is in progress. The caller
+/// is responsible for the `max_bytes` budget.
+#[doc(hidden)]
+pub fn decode_source(
+    source: Box<dyn MediaSource>,
+    limits: Limits,
+    generation: &AtomicU64,
+    expected_generation: u64,
+) -> Result<Decoded, DecodeError> {
+    let check_generation = || {
+        if generation.load(Ordering::Acquire) == expected_generation {
+            Ok(())
+        } else {
+            Err(DecodeError::Cancelled)
+        }
+    };
+    check_generation()?;
+    let stream = MediaSourceStream::new(source, Default::default());
     let mut format = symphonia::default::get_probe()
         .probe(&Hint::new(), stream, Default::default(), Default::default())
         .map_err(map_error)?;

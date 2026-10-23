@@ -1,0 +1,4 @@
+## mutation C: running-total frame check removed
+test running_frame_total_is_limited_when_the_container_declares_no_length ... FAILED
+thread 'running_frame_total_is_limited_when_the_container_declares_no_length' (50400) panicked at crates\vynamp-decode\tests\adverse.rs:249:54:
+test result: FAILED. 8 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.57s

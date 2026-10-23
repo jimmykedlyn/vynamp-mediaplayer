@@ -1,0 +1,11 @@
+## baseline
+test invalid_and_truncated_streams_are_errors_not_partial_success ... ok
+test stale_generation_never_returns_pcm_and_can_restart_with_new_generation ... ok
+test byte_frame_rate_and_channel_budgets_reject_before_returning_pcm ... ok
+test running_frame_total_is_limited_when_the_container_declares_no_length ... ok
+test generation_change_on_the_last_read_is_never_returned_as_pcm ... ok
+test mp3_without_trustworthy_trim_is_rejected_instead_of_partial_success ... ok
+test registry_describes_only_experimental_probed_bindings ... ok
+test wav32_lsb_extremes_and_negative_one_survive_without_float_conversion ... ok
+test generation_change_during_decode_cancels_at_every_read_and_stops_early ... ok
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.94s
