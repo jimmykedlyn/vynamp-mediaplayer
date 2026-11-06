@@ -730,9 +730,4 @@ Versão 0.8.0 · 2026-11-05 · Markdown de produto, tooling, bootstrap e evidên
 
 - [Decisão D-MVP-01..04 — o MVP é a fonte única da UI](product/05-decisions.md#decisão-o-mvp-é-a-fonte-única-da-ui-2026-11-05) — docs/product/05-decisions.md; os dois arquivos de skin deixam de ser fonte de requisito.
 - [Evidência chore-specs-skin-gaps](evidence/PR/chore-specs-skin-gaps/README.md) — docs/evidence/PR/chore-specs-skin-gaps/README.md; oito afirmações conferidas contra o código do pin, verificações locais e limitações declaradas.
-
-# Fonte única da UI: o MVP web (2026-11-05)
-
-- [Decisão: o MVP é a fonte única da UI nativa — D-MVP-01..04](product/05-decisions.md#decisão-o-mvp-é-a-fonte-única-da-ui-2026-11-05) — docs/product/05-decisions.md; os dois arquivos SKIN deixam de ser fonte de requisito.
-- [Evidência chore-specs-skin-gaps](evidence/PR/chore-specs-skin-gaps/README.md) — docs/evidence/PR/chore-specs-skin-gaps/README.md; verificação das oito afirmações contra o código do pin rev.38 e limitações declaradas.
 - [Corpo do PR chore-specs-skin-gaps](evidence/PR/chore-specs-skin-gaps/pr-body.md) — docs/evidence/PR/chore-specs-skin-gaps/pr-body.md

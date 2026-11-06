@@ -1,6 +1,6 @@
 # Equalizadores — gráfico 10/20/31/64 e paramétrico até 32 filtros
 
-Versão: 0.7.4 · Data: 2026-11-05 · Estado: especificação proposta; **nenhum equalizador está implementado no player nativo**. No protótipo HTML/SVG/JS (referência externa do Codex, fora deste repositório) a rev. 15 relata EQ e PEQ com áudio real dentro do grafo modular (ver §14); esse relato não foi verificado aqui.
+Versão: 0.7.4 · Data: 2026-11-05 · Estado: especificação proposta; **nenhum equalizador está implementado no player nativo**. No MVP web de referência (`vynamp-mvp-reference@0d9860b`, rev.38, fora deste repositório) o EQ e o PEQ existem e o código foi conferido para este documento — o que foi verificado e o que não foi está na §14.
 
 Subcapítulo obrigatório do [DSP](03-dsp.md). Consolida o que já estava em [03-dsp](03-dsp.md) (v0.7.0), no [contrato do sinal](07-dsp-signal-contract.md) e nas tarefas [TASK-E04-01](../../tasks/items/TASK-E04-01.md), [TASK-E04-04](../../tasks/items/TASK-E04-04.md), [TASK-E02-07](../../tasks/items/TASK-E02-07.md) e [TASK-E12-10](../../tasks/items/TASK-E12-10.md). Decisões e divergências estão em [decisões DSP](../product/05-decisions.md#decisões-dsp-e-equalizadores-2026-10-25).
 

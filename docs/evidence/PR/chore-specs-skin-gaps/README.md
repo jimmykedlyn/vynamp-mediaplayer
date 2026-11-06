@@ -1,6 +1,6 @@
 # Evidência — chore-specs-skin-gaps
 
-Data: 2026-11-05 · Autor: Claude Opus 5.5 · Revisor: subagente de contexto limpo.
+Data: 2026-11-05 (rev. 2) · Autor: Claude Opus 5.5 · Revisão: **direta pelo autor** — a revisão por subagente de contexto limpo não chegou a rodar, ver "Limitações".
 
 Registra **por que** este PR existe, o que foi verificado no código do MVP e o que **não** foi.
 
@@ -17,7 +17,7 @@ A decisão é factualmente segura: os SKIN eram **consumidores** declarados dest
 
 ## Método: verificar antes de re-apontar
 
-Re-apontar citação sem evidência trocaria um erro por outro. Oito afirmações atribuídas aos SKIN foram conferidas contra o código do MVP em `vynamp-mvp-reference@0d9860b` (rev.38). Quatro saíram de subagentes de verificação com estágio adversarial de refutação; quatro foram conferidas diretamente, depois de o workflow de verificação passar de 50 minutos sem convergir.
+Re-apontar citação sem evidência trocaria um erro por outro. Oito afirmações atribuídas aos SKIN foram conferidas contra o código do MVP em `vynamp-mvp-reference@0d9860b` (rev.38). **As oito foram conferidas diretamente pelo autor**, lendo o arquivo do pin que cada linha da tabela cita. Antes disso, um workflow de verificação por subagentes chegou a rodar sobre quatro delas, mas foi abortado depois de ~50 minutos sem convergir e **seu estágio adversarial de refutação nunca concluiu** — portanto nenhuma das oito teve segunda leitura independente. O que a tabela registra é a leitura direta, não um consenso entre verificadores.
 
 | Afirmação | Veredito no MVP | Evidência |
 |---|---|---|
@@ -42,10 +42,10 @@ O achado veio da verificação direta do código, já que o subagente de revisã
 
 | Arquivo | Mudança |
 |---|---|
-| [`docs/product/05-decisions.md`](../../../product/05-decisions.md) | 0.7.6. Nova seção "O MVP é a fonte única da UI": **D-MVP-01..04**, tabela "Comportamentos que os SKIN atribuíam ao produto e o MVP não tem", "Divergências encerradas". Quatro divergências antigas reescritas como encerradas |
+| [`docs/product/05-decisions.md`](../../../product/05-decisions.md) | **0.8.0** (o PR não sobe a versão: `develop` já a tinha em 0.8.0, vinda da E19-02). Nova seção "O MVP é a fonte única da UI": **D-MVP-01..04**, tabela "Comportamentos que os SKIN atribuíam ao produto e o MVP não tem", "Divergências encerradas". Quatro divergências antigas reescritas como encerradas |
 | [`docs/audio/08-equalizers.md`](../../../audio/08-equalizers.md) | 0.7.4. Passo de teclado deixa de citar o SKIN e passa a citar o MVP com o que ele realmente faz; §14 deixa de ser contrato para o Codex e passa a citar o pin verificado |
-| [`docs/audio/10-vitrola.md`](../../../audio/10-vitrola.md) | 0.7.3. Presets, local/atalhos, enable por seção e marco M3 substituem as citações aos SKIN por comportamento verificado no MVP |
-| [`docs/design/05-dsp-panel.md`](../../../design/05-dsp-panel.md) | 0.7.3. §6 troca "convenções preservadas do SKIN" pela interação real do MVP; registra que 0 VU ajustável e slot de 28 DIP **não existem**, e a divergência 12 × 16 medidores |
+| [`docs/audio/10-vitrola.md`](../../../audio/10-vitrola.md) | **0.7.4**. Presets, local/atalhos e enable por seção substituem as citações aos SKIN pelo comportamento verificado no MVP; §5 deixa de dizer que Vinyl/Tube não têm processamento — no pin rev.38 os dois rodam num AudioWorklet |
+| [`docs/design/05-dsp-panel.md`](../../../design/05-dsp-panel.md) | **0.7.3**. §6 troca "convenções preservadas do SKIN" pela interação real do MVP; registra que 0 VU ajustável e slot de 28 DIP **não existem**, e a divergência 12 × 16 medidores |
 
 **Nenhuma alteração de código, dependência, workflow ou backlog.** As contagens 191 requisitos / 191 tarefas / 19 épicos não mudam.
 
@@ -66,12 +66,14 @@ O achado veio da verificação direta do código, já que o subagente de revisã
 | `cargo clippy --workspace --all-targets --locked -- -D warnings` | `No issues found` |
 | `cargo test --workspace --locked` | 52 + 34 testes, 0 falhas |
 
-Os dois arquivos de evidência foram indexados em `docs/INDEX.md` (o validador exige que todo `.md` esteja no índice).
+Os dois arquivos de evidência foram indexados em `docs/INDEX.md` (o validador exige que todo `.md` esteja no índice) — em **uma** seção; a rev. 1 criou duas entradas para a mesma decisão e isso foi corrigido.
+
+Resultados da rev. 2: os cinco comandos acima foram executados de novo sobre o estado corrigido, com o mesmo resultado.
 
 ## Limitações
 
 - **A verificação do MVP é de código, não de comportamento em execução.** Nenhum navegador foi aberto, nenhuma interação foi exercitada. "Existe" aqui significa "o código do MVP implementa"; "não existe" significa "não há handler, constante nem CSS que o faça".
-- **O workflow de verificação foi interrompido.** Quatro afirmações ficaram sem o estágio adversarial automatizado e foram conferidas diretamente, com o mesmo critério, mas sem o segundo par de olhos.
-- **A revisão independente por subagente não rodou.** O subagente (Sonnet 5-5) foi interrompido por limite de cota do plano (HTTP 429, reset em ~74 h). As oito afirmações foram reverificadas **diretamente contra o código do MVP** por este autor — é assim que o erro do atalho Shift+V foi achado. Não houve, portanto, um segundo par de olhos sobre a redação.
+- **Nenhuma afirmação teve segunda leitura independente.** O workflow de verificação por subagentes foi abortado sem concluir o estágio adversarial, e o subagente revisor (Sonnet 5-5) morreu por limite de cota do plano (HTTP 429, reset em ~74 h) antes de emitir relatório. Autor e verificador são a mesma sessão. É assim que o erro do atalho Shift+V foi achado — mas por releitura própria, não por revisão.
+- **A rev. 2 do PR corrige dois erros factuais da rev. 1**, encontrados em revisão depois do merge do #35: `10-vitrola.md` afirmava que Vinyl e Tube não tinham processamento no pin (têm, em AudioWorklet), e `05-dsp-panel.md` mantinha a calibração de 0 VU da skin numa linha três parágrafos abaixo do texto que a declarava inexistente. Ambos estão corrigidos aqui.
 - **`[DEMO]` vs áudio real no EQ:** o pin declara `[REAL] … uma instância Web Audio` quando o nó está na rota viva. A *medição* de latência, CPU e qualidade continua não executada aqui.
 - Este PR não altera visibilidade, proteções, assinatura nem plano — isso é da TASK-E19-06, por decisão do mantenedor na ADR-014.

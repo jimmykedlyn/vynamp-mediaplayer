@@ -39,12 +39,12 @@ Comandos, resultados, ambientes/fixtures e limitações:
 | `cargo clippy --workspace --all-targets --locked -- -D warnings` | `No issues found` |
 | `cargo test --workspace --locked` | 52 + 34 testes, 0 falhas |
 
-Método: oito afirmações atribuídas aos SKIN foram conferidas contra o código do MVP em `vynamp-mvp-reference@0d9860b` (rev.38), quatro delas por subagentes de verificação com estágio adversarial de refutação. O resultado por afirmação — inclusive as três que **não** existem no MVP ("0 VU = −18 dBFS ajustável", "slot de 28 DIP", "intensidade 0 = bypass da seção") e as que **divergem** (presets da Vitrola; atalho no inspector) — está na evidência.
+Método: oito afirmações atribuídas aos SKIN foram conferidas contra o código do MVP em `vynamp-mvp-reference@0d9860b` (rev.38) — **as oito diretamente pelo autor**, lendo o arquivo do pin citado em cada linha. Um workflow de verificação por subagentes chegou a rodar sobre quatro delas, mas foi abortado sem concluir o estágio adversarial, então nenhuma teve segunda leitura independente. O resultado por afirmação — inclusive as três que **não** existem no MVP ("0 VU = −18 dBFS ajustável", "slot de 28 DIP", "intensidade 0 = bypass da seção") e as que **divergem** (presets da Vitrola; atalho no inspector) — está na evidência.
 
 Limitações declaradas:
 
 - A verificação do MVP é **de código, não de comportamento em execução**: nenhum navegador foi aberto. "Existe" significa "o código implementa"; "não existe" significa "não há handler, constante nem CSS que o faça".
-- Quatro das oito afirmações ficaram sem o estágio adversarial automatizado (workflow interrompido) e foram conferidas diretamente, com o mesmo critério.
+- **Nenhuma** das oito afirmações teve segunda leitura independente: o workflow de verificação foi abortado sem concluir o estágio adversarial e o subagente revisor morreu por cota (HTTP 429) antes de emitir relatório.
 - Medição de latência, CPU e qualidade de áudio no EQ continua não executada aqui.
 - Este PR não altera visibilidade, proteções, assinatura nem plano — isso é da TASK-E19-06, por decisão da ADR-014.
 
@@ -62,8 +62,15 @@ Revisão técnica (subagente Sonnet/Opus), commit revisado e achados:
 - [x] Docs/contracts/notices atualizados; nenhuma credencial no diff.
 - [ ] CI Gate (GitHub Actions) aprovado; hardware e release assinado continuam gates separados — CI deste PR em execução.
 
-**Revisão independente: não realizada.** O subagente revisor (Sonnet 5-5) foi interrompido por limite de cota do plano (HTTP 429, reset em ~74 h). As oito afirmações atribuídas ao MVP foram **reverificadas diretamente contra o código** de `vynamp-mvp-reference@0d9860b` por este autor, e foi assim que um erro próprio foi encontrado e corrigido antes de abrir o PR: a §6 do painel DSP dizia que **Shift+V** abre o menu de modelos, mas em `mvp/player.js:224` o modificador de comando é `ctrlKey || metaKey` — **Ctrl+Shift+V** abre o menu, **Shift+V** recua o ciclo de medidores e **Ctrl+V** sozinho não faz nada. Texto corrigido. Não houve, portanto, segundo par de olhos sobre a redação: quem approve conhece o resultado da verificação direta.
+**Revisão independente: não realizada.** O subagente revisor (Sonnet 5-5) foi interrompido por limite de cota do plano (HTTP 429, reset em ~74 h) antes de emitir relatório. As oito afirmações atribuídas ao MVP foram **reverificadas diretamente contra o código** de `vynamp-mvp-reference@0d9860b` por este autor, e foi assim que um erro próprio foi encontrado e corrigido: a §6 do painel DSP dizia que **Shift+V** abre o menu de modelos, mas em `mvp/player.js:224` o modificador de comando é `ctrlKey || metaKey` — **Ctrl+Shift+V** abre o menu, **Shift+V** recua o ciclo de medidores e **Ctrl+V** sozinho não faz nada. Não houve, portanto, segundo par de olhos sobre a redação.
 
-Commit revisado: `c38ce84`.
+### Rev. 2 — correções depois do merge do #35
+
+O #35 foi mergeado com dois erros factuais que a revisão pós-merge encontrou. Ambos estão corrigidos nos commits seguintes a este:
+
+1. **`docs/audio/10-vitrola.md` dizia que Vinyl e Tube não têm processamento no pin.** Têm: `class Vinyl` e `class Tube` em `mvp/advanced-dsp.js`, montados como `AudioWorkletNode` por `mvp/graph-audio.js`, com `real=true` em `mvp/graph-model.js`. A frase do MVP que dizia o contrário (`graph-editor.js`: "Vinyl/Tube não têm adaptador") é texto que ficou para trás. O cabeçalho e a §5 foram reescritos para dizer o que o código faz e separar isso do que continua **não validado** (acústica, CPU/latência, WearState persistido, `Context` completo, plataformas nativas).
+2. **`docs/design/05-dsp-panel.md` mantinha "0 VU = −18 dBFS (−14/−20 opcionais)"** numa tabela três parágrafos abaixo do texto que declara essa convenção inexistente no MVP. A linha agora diz "Referência de 0 VU: **a definir**" e cita a escala real, que vem por medidor em `scaleDB`/`scaleAngles` no `meta.json` (os analógicos vão de −20 a +3 dB).
+
+Também corrigidos: uma seção duplicada no `docs/INDEX.md` (duas entradas para a mesma decisão D-MVP) e três contradições internas da evidência — o campo "Revisor" e a linha "quatro afirmações saíram de subagentes com estágio adversarial" diziam o oposto da seção "Limitações", e a versão de `05-decisions.md` estava registrada como 0.7.6 quando o arquivo já estava em 0.8.0 desde a E19-02.
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)

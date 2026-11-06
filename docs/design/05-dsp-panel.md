@@ -1,6 +1,6 @@
 # Painel Audio DSP, equalizador e medidores — UI/UX
 
-Versão: 0.7.3 · Data: 2026-11-05 · Estado: especificação proposta. No nativo, nada está implementado. Segundo a referência externa (rev. 14/15), o protótipo HTML/SVG/JS do Codex, fora deste repositório, passou a ter UI DSP; isso é relatado e não foi verificado aqui.
+Versão: 0.7.3 · Data: 2026-11-05 · Estado: especificação proposta. No nativo, nada está implementado. No MVP web de referência (`vynamp-mvp-reference@0d9860b`, rev.38, fora deste repositório) a UI DSP existe; o código foi conferido onde este documento o cita, com as ressalvas da §6.
 
 Base: [visual](01-visual-system.md), [layouts](02-layouts.md), [acessibilidade](03-accessibility-i18n.md), [DSP](../audio/03-dsp.md), [equalizadores](../audio/08-equalizers.md), [vitrola](../audio/10-vitrola.md) e [visualizadores](../extensions/04-visualizer-contract.md). A UI nativa da cadeia e do EQ avançado é planejada em TASK-E02-07 (M3).
 
@@ -69,7 +69,7 @@ Instrumentos de exibição **não são efeitos DSP** e nunca alteram a saída. O
 | Medidor | Definição / metodologia | Estado |
 |---|---|---|
 | Spectrum FFT | janela Hann, FFT 2048/4096 padrão, smoothing/hold/decay em unidades reais, escala log/linear | planejado |
-| VU (balístico) | integração ~300 ms, 0 VU = −18 dBFS (−14/−20 opcionais). **Não** é peak | planejado; valores [proposal] da skin |
+| VU (balístico) | integração ~300 ms. **Não** é peak. **Referência de 0 VU: a definir.** O MVP não fixa um valor dBFS: cada medidor traz a própria escala em `scaleDB`/`scaleAngles` no `meta.json` (os analógicos vão de −20 a +3 dB). "0 VU = −18 dBFS (com −14/−20 opcionais)" era convenção da skin e **não** existe no MVP; adotá-la é decisão nova | escala do MVP verificada; referência nativa pendente |
 | Peak / PPM | amplitude de sample peak com hold | planejado |
 | True Peak (dBTP) | oversampling ≥ 4× conforme ITU-R BS.1770 (algoritmo pinado na fixture); medido no tap final | planejado |
 | Loudness (LUFS) | momentary 400 ms, short-term 3 s, integrated com gating (BS.1770 / EBU R128), LRA (EBU Tech 3342) | planejado (analyzer E08-03); medidor em tempo real: proposto |
@@ -155,7 +155,7 @@ Preservam-se: Classic 10 bandas, Gráficos 10/20/31/64 e Paramétrico até 32 fi
 
 ## 9. Fluxo modular (grafo) — referência do protótipo
 
-Vista **Fluxo modular**, acessível por Áudio e efeitos, complementa o editor tradicional por catálogo, que continua disponível. Tudo abaixo vem da referência externa rev. 15 (relatado, não verificado neste repositório); o contrato nativo e a separação protótipo × nativo estão em [DSP: grafo modular](../audio/03-dsp.md#grafo-modular-protótipo--nativo). Nativo hoje: nada implementado.
+Vista **Fluxo modular**, acessível por Áudio e efeitos, complementa o editor tradicional por catálogo, que continua disponível. Os eixos abaixo vêm do histórico rev. 15; onde este documento cita código, ele foi conferido no pin rev.38 — em particular a montagem dos módulos avançados como `AudioWorkletNode` em `mvp/graph-audio.js` e o `real=true` de `mvp/graph-model.js` ([10-vitrola §5](../audio/10-vitrola.md)). O que segue **relatado e não verificado** é a validação: suítes de UI, render offline e contraste dos fios. O contrato nativo e a separação protótipo × nativo estão em [DSP: grafo modular](../audio/03-dsp.md#grafo-modular-protótipo--nativo). Nativo hoje: nada implementado.
 
 | Eixo | Conteúdo |
 |---|---|
@@ -179,13 +179,16 @@ Vista **Fluxo modular**, acessível por Áudio e efeitos, complementa o editor t
 | Echo, Reverb, saturação suave | áudio real | IR sintética, não sala medida nem FIR; troca de decay/damping gera nova IR, não novo grafo; saturação não é o Tube Amplifier |
 | LFO→Ganho | controle real | ±0,25 de ganho linear |
 | Spectrum, pico/RMS | análise real | FFT 1024, dBFS, antes do volume; não são LUFS/dBTP; sem valores sintéticos para a coleção demo |
-| Vinyl Simulator e Tube Amplifier | configuração preservada, sem processamento no grafo | dependem de algoritmos próprios e validação acústica |
-| True Peak, LUFS, gate/expander e demais sem adaptador | nós de configuração, indisponíveis para áudio | habilitado na rota ativa impede a ativação, com motivo exibido; bypass explícito permite a rota |
+| Vinyl Simulator e Tube Amplifier | **áudio real** — `class Vinyl` e `class Tube` em `mvp/advanced-dsp.js`, montados como `AudioWorkletNode` (`vynamp-advanced37`) por `mvp/graph-audio.js`; `real=true` em `mvp/graph-model.js` | processamento existe; algoritmos e validação acústica continuam pendentes ([10-vitrola §5](../audio/10-vitrola.md)) |
+| True Peak (limiter), LUFS (loudness-meter), gate e expander | **áudio real** — os quatro saem com `real=true`; `gate`/`expander` montam `AudioWorkletNode` `vynamp-dynamics36`, o limiter tem lookahead e FIR 4×, o loudness-meter é o medidor de LUFS | limiter exige oversample 4× e ser o último processador audível (2×/8× não disponíveis); o LUFS é medido, não é conformidade BS.1770 certificada |
+| Demais sem adaptador | nós de configuração, sem áudio | habilitado na rota ativa impede a ativação, com motivo exibido; bypass explícito permite a rota |
 
-**Canvas e interação.** Nós arrastáveis, seleção múltipla, grupos/racks, conexão por arraste ou por seletores de origem/destino no inspetor (alternativa sem arraste), fios selecionáveis, menus contextuais, zoom/pan/ajustar/minimapa, biblioteca pesquisável, presets de cadeia (Clean, Warm Analog, Vinyl, Studio, Spatial) carregados em bypass, A/B de sessão, histórico de até 60 alterações e JSON versionado. Reabertura e importação iniciam em bypass, sem reprodução automática; Vinyl carrega configuração indisponível, sem simular som. Atalhos: Delete remove a seleção, Ctrl+D duplica, Ctrl+Z e Ctrl+Shift+Z desfazem/refazem; campos de edição preservam seus atalhos. O nome Studio não é certificação de mastering; A/B não é compensação automática de loudness. Mover nós, pan, zoom e acabamento não reconstroem o áudio.
+**Texto atrasado no MVP.** A frase "Vinyl/Tube não têm adaptador", exibida pela mensagem de `Carregar` preset em `mvp/graph-editor.js`, contradiz o próprio `graph-model.js` do pin, que marca os dois com `real=true`. É texto que ficou para trás — não é fonte para esta spec.
+
+**Canvas e interação.** Nós arrastáveis, seleção múltipla, grupos/racks, conexão por arraste ou por seletores de origem/destino no inspetor (alternativa sem arraste), fios selecionáveis, menus contextuais, zoom/pan/ajustar/minimapa, biblioteca pesquisável, presets de cadeia (Clean, Warm Analog, Vinyl, Studio, Spatial) carregados em bypass, A/B de sessão, histórico de até 60 alterações e JSON versionado. Reabertura e importação iniciam em bypass, sem reprodução automática. Os presets de cadeia carregam Vinyl em bypass por precaução de nível, não por falta de processamento — o módulo tem áudio (ver tabela acima). Atalhos: Delete remove a seleção, Ctrl+D duplica, Ctrl+Z e Ctrl+Shift+Z desfazem/refazem; campos de edição preservam seus atalhos. O nome Studio não é certificação de mastering; A/B não é compensação automática de loudness. Mover nós, pan, zoom e acabamento não reconstroem o áudio.
 
 **Fios e estados.** Bézier acompanham as portas; áudio em linha contínua, controle tracejado com portas quadradas; paletas ciano/violeta, âmbar/verde ou tokens do tema; brilho pode ir a zero e a animação desligar. A animação de fluxo só aparece com áudio local em reprodução, cadeia habilitada e ambos os extremos na rota compilada, sem bypass; a coleção DEMO silenciosa nunca fabrica processamento. Movimento reduzido prevalece.
 
 **Limites, segurança e recuperação.** Limites do adaptador web: 64 nós, 128 conexões, preset de até 512 KiB, 512 biquads e 32 MiB de IR sintética; não são capacidade nativa comprovada, e latência/CPU exigem medição antes de metas. Presets validados atomicamente; leitura atrasada não sobrescreve edição recente; falha de ativação volta ao bypass com motivo. Ajustes incompatíveis não são executados parcialmente nem ganham badge de processamento real. Foco visível, ações sem arraste, Escape e retorno de foco permanecem requisitos; leitor de tela e WCAG completo seguem pendentes.
 
-**Pendente (fora do protótipo):** processadores nativos e sua qualidade sonora, Vinyl/Tube completos, gate/expander, true peak certificado, LUFS/BS.1770, demais recursos do catálogo sem adaptador, saída/driver nativos, cobertura integral do MVP v1.2, importação de IR no grafo, compensação de latência entre ramos e reordenação livre no nativo.
+**Pendente (fora do protótipo):** processadores nativos e sua qualidade sonora; validação acústica de Vinyl/Tube (o áudio existe, a validação não); true peak **certificado** e LUFS conforme BS.1770 (o limiter e o medidor têm áudio, não certificação); demais recursos do catálogo sem adaptador; saída/driver nativos; cobertura integral do MVP v1.2; importação de IR no grafo; compensação de latência entre ramos; reordenação livre no nativo.

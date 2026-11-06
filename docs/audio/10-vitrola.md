@@ -1,6 +1,6 @@
 # vitrola — Vinyl Simulator e Tube Amplifier Simulator no DSP
 
-Versão: 0.7.3 · Data: 2026-11-05 · Estado: **planejamento pré-existente preservado**. O design da biblioteca foi aprovado em 2026-10-23. Biblioteca e integração não foram implementadas. No protótipo web (referência externa rev. 15, relatado, não verificado aqui) Vinyl e Tube só têm configuração, sem processamento.
+Versão: 0.7.4 · Data: 2026-11-05 · Estado: **planejamento pré-existente preservado**. O design da biblioteca foi aprovado em 2026-10-23. Biblioteca e integração não foram implementadas. No MVP web de referência (`vynamp-mvp-reference@0d9860b`, rev.38) Vinyl e Tube **têm processamento real** num AudioWorklet; a rev. 15, que só tinha configuração, é histórico (ver §5).
 
 ## 1. Fonte da verdade e escopo
 
@@ -79,9 +79,23 @@ O pedido traz parâmetros "candidatos a validar". A regra: o que a referência d
 - A/B com loudness igualado (**proposto**): o efeito não deve parecer "melhor" só por estar mais alto.
 - **Atalho Vitrola (DSP-UX-02, v1.4).** O atalho "Vitrola" junto à área do instrumento e a família "Vitrola" do painel são **entradas para a área existente** (Vinil e Válvula, com configurações, presets, prioridades e bypass independentes). Não fundem os dois simuladores nem duplicam o estado dos parâmetros entre acessos. No protótipo o destino inicial é o vinil. Contrato: [painel DSP §8](../design/05-dsp-panel.md#8-acesso-e-controles-dsp-ux).
 
-### Estado no protótipo (rev. 15, relatado) × nativo
+### Estado no protótipo × nativo
 
-Evidência relatada da referência externa rev. 14/15, não verificada neste repositório. **Especificado**: este documento e a referência vitrola. **Implementado no protótipo (relatado)**: a configuração completa do catálogo para Vinyl e Tube, **sem processamento** desses modelos no grafo modular; o preset de cadeia "Vinyl" carrega essa configuração indisponível para processamento, sem simular som de vinil. **Validado no protótipo (relatado)**: nenhuma validação sonora; a referência diz que esses modelos dependem de adaptadores e algoritmos próprios e de validação acústica ainda não feitos. **Nativo**: nada. A Saturação suave do protótipo (tanh, oversampling 2×) **não é** o Tube Amplifier. Fases, prioridade e a pendência de TASK (seção 6) não mudam.
+**No pin rev.38 há processamento real.** Vinyl e Tube estão em `mvp/advanced-dsp.js` como classes com kernels próprios (`class Vinyl`, `class Tube`), rodam num `AudioWorkletNode` montado por `mvp/graph-audio.js` (`VynampAdvancedDSP.TYPES = ['limiter','loudness-meter','tube','vinyl','clip']`), e `mvp/graph-model.js` marca os dois com `real=true`. O `class Vinyl` implementa superfície (hiss/crackle/pops por estado de ruído e PRNG), cápsula (peaking 13 kHz, lowpass 15 kHz, highshelf 6,5 kHz), transporte (wow/flutter/drift), raio e desgaste; o `class Tube` implementa saturação por perfil, compressão, sag, transformador e aquecimento, com oversampling 2× e latência declarada de 3 amostras. A descrição de cada um nos catálogos é explícita: "Modelo procedural de superfície, cápsula, traçado e transporte" e "Modelo não linear por canal, assimetria por perfil… Não é circuito físico calibrado". Ou seja: **não** é processamento de referência validado; é processamento existente.
+
+O que a rev. 15 relatava — "configuração completa do catálogo, sem processamento" — **não vale mais**. A frase antiga do MVP (`graph-editor.js`: "Vinyl/Tube não têm adaptador") é texto que ficou para trás e contradiz o próprio código do pin.
+
+**O que continua pendente**, e é o que a validação acústica cobriria:
+
+| Item | Estado no pin | Efeito |
+|---|---|---|
+| Validação sonora (espectro, aliasing, densidade de crackle × loudness, período de wow) | não executada | os testes VIT-T-01..10 (§7) continuam sem resultado |
+| Medição de CPU, latência e qualidade a 96 kHz | não executada | a meta de < 5% de um núcleo é meta, não gate |
+| `WearState` persistido por álbum | o worklet acompanha desgaste em memória (`accumulatedWear`, até +15%); não há arquivo persistido | persistência e migração continuam decisão de integração |
+| `Context` completo (rádio, gapless, `track_changed`) | o MVP passa `transport` (posição, lado, desgaste, fase) | o contrato completo da §3 continua especificado, não implementado |
+| Plataformas e taxas | o MVP roda no navegador | nada em nativo |
+
+**Especificado**: este documento e o design aprovado do vitrola. **Implementado no MVP (verificado no código)**: processamento de Vinyl e Tube no grafo modular. **Validado**: nada. **Nativo**: nada. Fases, prioridade e a pendência de TASK (seção 6) não mudam.
 
 ## 6. Roadmap (status herdado)
 
