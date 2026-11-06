@@ -202,8 +202,6 @@ Versão 0.8.0 · 2026-11-05 · Markdown de produto, tooling, bootstrap e evidên
 
 - [Vynamp Branding Implementation Plan](superpowers/plans/2026-10-14-vynamp-branding.md) — docs/superpowers/plans/2026-10-14-vynamp-branding.md
 
-- [Reinício Windows consolidado](superpowers/plans/2026-10-15-windows-restart.md) — docs/superpowers/plans/2026-10-15-windows-restart.md
-
 - [Vynamp — revisão de completude da especificação](superpowers/specs/2026-10-14-completeness-audit-design.md) — docs/superpowers/specs/2026-10-14-completeness-audit-design.md
 
 - [Automação Rust — desenho aprovado em conversa](superpowers/specs/2026-10-14-rust-tooling-design.md) — docs/superpowers/specs/2026-10-14-rust-tooling-design.md
@@ -677,9 +675,6 @@ Versão 0.8.0 · 2026-11-05 · Markdown de produto, tooling, bootstrap e evidên
 
 # Preparação E15-04
 
-- [Desenho Woodpecker e Cloudflare Tunnel](superpowers/specs/2026-10-18-e15-04-woodpecker-cloudflare-design.md) — docs/superpowers/specs/2026-10-18-e15-04-woodpecker-cloudflare-design.md
-- [Plano Woodpecker E15-04](superpowers/plans/2026-10-18-e15-04-woodpecker.md) — docs/superpowers/plans/2026-10-18-e15-04-woodpecker.md
-- [Adendo CI/CD somente Woodpecker](superpowers/plans/2026-10-19-e15-04-woodpecker-only-ci.md) — docs/superpowers/plans/2026-10-19-e15-04-woodpecker-only-ci.md; substituído pela ADR-014.
 - [Evidência E15-04](evidence/PR/task-e15-04/README.md) — docs/evidence/PR/task-e15-04/README.md
 - [Evidência Woodpecker 3.20.1](evidence/PR/chore-woodpecker-3-20-1/README.md) — docs/evidence/PR/chore-woodpecker-3-20-1/README.md
 
