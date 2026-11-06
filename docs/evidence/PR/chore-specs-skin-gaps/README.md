@@ -2,6 +2,8 @@
 
 Data: 2026-11-05 (rev. 2) · Autor: Claude Opus 5.5 · Revisão: **direta pelo autor** — a revisão por subagente de contexto limpo não chegou a rodar, ver "Limitações".
 
+> **Alcance deste PR.** O corpo de evidência descreve o trabalho original, que foi mergeado no [#35](https://github.com/jimmykedlyn/vynamp-mediaplayer/pull/35). O PR atual leva **apenas a rev. 2**: as correções dos dois erros factuais (`10-vitrola.md`, `05-dsp-panel.md`), da seção duplicada no `INDEX.md` e das três contradições internas da evidência. Nada do restante da tabela abaixo mudou de veredito.
+
 Registra **por que** este PR existe, o que foi verificado no código do MVP e o que **não** foi.
 
 ## Origem do trabalho
